@@ -46,7 +46,7 @@
   "Perform a brute force search for all terms built from `combinators` with size = `n`,
    that match `pred` when reduced with `parms` up to `limit` steps.
 
-   Example; I from BCKW: (search BCKW 3 [:x] (partial = :x) 10)"
+   Example; I from BCKW: (search BCKW 3 ['x] (partial = 'x) 10)"
   [combinators n parms pred limit]
   (->> (trees (keys combinators) n)
        (map #(concat % parms))
