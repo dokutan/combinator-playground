@@ -1,9 +1,10 @@
 (ns combinator-playground.quests
   (:require
    [clojure.pprint :as pprint]
-   [combinator-playground.combinators :refer [BCKW I->SK SKI->BCKW SKI->X]]
+   [combinator-playground.combinators :refer [BCKW BCKW->SKI I->SK SKI->BCKW SKI->X]]
    [combinator-playground.lambda :refer [lambda->SKI*]]
-   [combinator-playground.reduce :refer [reduce*]]))
+   [combinator-playground.reduce :refer [reduce*]]
+   [combinator-playground.utils :refer [replace*]]))
 
 ;;; Solutions for https://dallaylaen.github.io/ski-interpreter/quest.html
 
@@ -11,7 +12,7 @@
   (let [ski (lambda->SKI* expr)]
     (concat
      (vec ski)
-     (reduce* BCKW (SKI->BCKW (last ski))))))
+     [(last (reduce* BCKW (SKI->BCKW (last ski))))])))
 
 (defn lambda->X* [expr]
   (let [ski (lambda->SKI* expr)]
@@ -19,7 +20,7 @@
      (vec ski)
      (SKI->X (last ski)))))
 
-(def quests
+(defn quests []
   ["1.1 x→y→y"
    (lambda->SKI* '[x [y y]])
 
@@ -62,8 +63,10 @@
    "2.4 W x y = x y y"
    (lambda->SKI* '[x [y x y y]])
 
-   "2.5 x→y→x x TODO!!!"
-   (lambda->SKI* '[x [y M x]])
+   "2.5 x→y→x x"
+   ['(C (K M))
+    "="
+    (BCKW->SKI '(C (K M)))]
 
    "2.6 R x y z = y z x"
    (lambda->SKI* '[x [y [z y z x]]])
@@ -120,7 +123,46 @@
    (lambda->X* '[x [y x]])
 
    "4.5 S [X]"
-   (lambda->X* '[x [y [z x z (y z)]]])])
+   (lambda->X* '[x [y [z x z (y z)]]])
+
+   "6.1 J a b c d = a b (a d c)"
+   (lambda->SKI* '[a [b [c [d a b (a d c)]]]])
+
+   "6.2 T x y = y x [IJ]"
+   '[(J I I)]
+
+   "6.3 Q1 x y z = x (z y) [IJ]"
+   '[(J I)]
+
+   "6.4 B x y z = x (y z) [IJ]"
+   ['(search
+      {'J (fn [a b c d] (list a b (list a d c)))
+       'I (fn [x] x)
+       'T (fn [x y] (list y x))
+       'Q1 (fn [x y z] (list x (list z y)))}
+      7
+      '[x y z]
+      (partial = '(x (y z)))
+      100)
+    "→"
+    '(J T (Q1 T) (J (J T)))
+    "→"
+    (replace* {'T '(J I I) 'Q1 '(J I)} '(J T (Q1 T) (J (J T))))]
+
+   "6.5 C x y z = x z y [IJ]"
+   ['(search
+      {'J (fn [a b c d] (list a b (list a d c)))
+       'I (fn [x] x)
+       'T (fn [x y] (list y x))
+       'Q1 (fn [x y z] (list x (list z y)))}
+      6
+      '[x y z]
+      (partial = '(x z y))
+      100)
+    "→"
+    '(J T (J T) (J T))
+    "→"
+    (replace* {'T '(J I I)} '(J T (J T) (J T)))]])
 
 (defn print-quests []
-  (pprint/cl-format true "~{~a\n~{ ~a\n~}\n\n~}" quests))
+  (pprint/cl-format true "~{~a\n~{ ~a\n~}\n\n~}" (quests)))
