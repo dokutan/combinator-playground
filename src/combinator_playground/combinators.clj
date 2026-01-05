@@ -57,3 +57,10 @@
    {'T '(C (C K C))
     'A '(K (C K C))
     'M '(W (C K C))}))
+
+(def BCKW->MTAB
+  (partial
+   replace*
+   {'C '((B B T) (B B T) (B B T))
+    'K '(B (T A) (B B T))
+    'W '((B B T) (B B T) (B B T) (B M (B B T)))}))

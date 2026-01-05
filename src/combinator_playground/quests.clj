@@ -1,7 +1,8 @@
 (ns combinator-playground.quests
   (:require
    [clojure.pprint :as pprint]
-   [combinator-playground.combinators :refer [BCKW BCKW->SKI I->SK SKI->BCKW SKI->X]]
+   [combinator-playground.combinators :refer [BCKW BCKW->MTAB BCKW->SKI I->SK
+                                              SKI->BCKW SKI->X]]
    [combinator-playground.lambda :refer [lambda->SKI*]]
    [combinator-playground.reduce :refer [reduce*]]
    [combinator-playground.utils :refer [replace*]]))
@@ -124,6 +125,21 @@
 
    "4.5 S [X]"
    (lambda->X* '[x [y [z x z (y z)]]])
+
+   "5.1 I [MTAB]"
+   ['(A M)
+    '(A T)
+    '(A A)
+    '(A B)]
+
+   "5.2 C [MTAB]"
+   [(BCKW->MTAB 'C)]
+
+   "5.3 K [MTAB]"
+   [(BCKW->MTAB 'K)]
+
+   "5.4 W [MTAB]"
+   [(BCKW->MTAB 'W)]
 
    "6.1 J a b c d = a b (a d c)"
    (lambda->SKI* '[a [b [c [d a b (a d c)]]]])
