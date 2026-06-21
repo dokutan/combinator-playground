@@ -4,27 +4,32 @@
 
 ;;; Different combinator bases and conversions between them.
 
-;; The arity of the combinator functions is optionally stored in the metadata to avoid reflection.
+;; The arity of the combinator functions is optionally stored in the metadata to avoid reflection in `utils/arity`.
+
+(def all-combinators
+  "A selection of standard combinators."
+  {'I ^{:arity 1} (fn [x]     x)
+   'K ^{:arity 2} (fn [x _]   x)
+   'S ^{:arity 3} (fn [x y z] (list x z (list y z)))
+   'B ^{:arity 3} (fn [x y z] (list x (list y z)))
+   'C ^{:arity 3} (fn [x y z] (list x z y))
+   'W ^{:arity 2} (fn [x y]   (list x y y))
+   'X ^{:arity 1} (fn [x]     (list x 'S 'K))
+   'M ^{:arity 1} (fn [x]     (list x x))
+   'T ^{:arity 2} (fn [x y]   (list y x))
+   'A ^{:arity 2} (fn [_ y]   y)})
 
 (def SKI
-  {'I ^{:arity 1} (fn [x] x)
-   'K ^{:arity 2} (fn [x _] x)
-   'S ^{:arity 3} (fn [x y z] (list x z (list y z)))})
+  (select-keys all-combinators '[S K I]))
 
 (def BCKW
-  {'B ^{:arity 3} (fn [x y z] (list x (list y z)))
-   'C ^{:arity 3} (fn [x y z] (list x z y))
-   'K ^{:arity 2} (fn [x _] x)
-   'W ^{:arity 2} (fn [x y] (list x y y))})
+  (select-keys all-combinators '[B C K W]))
 
 (def XSKI
-  (into SKI {'X ^{:arity 1} (fn [x] (list x 'S 'K))}))
+  (select-keys all-combinators '[X S K I]))
 
 (def MTAB
-  {'M ^{:arity 1} (fn [x] (list x x))
-   'T ^{:arity 2} (fn [x y] (list y x))
-   'A ^{:arity 2} (fn [_ y] y)
-   'B ^{:arity 3} (fn [x y z] (list x (list y z)))})
+  (select-keys all-combinators '[M T A B]))
 
 (def BCKW->SKI
   (partial
