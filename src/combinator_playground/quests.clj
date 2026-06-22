@@ -1,19 +1,12 @@
 (ns combinator-playground.quests
   (:require
    [clojure.pprint :as pprint]
-   [combinator-playground.combinators :refer [BCKW BCKW->MTAB BCKW->SKI I->SK
+   [combinator-playground.combinators :refer [BCKW->MTAB BCKW->SKI I->SK
                                               SKI->BCKW SKI->X]]
-   [combinator-playground.lambda :refer [lambda->SKI*]]
-   [combinator-playground.reduce :refer [reduce*]]
+   [combinator-playground.lambda :refer [lambda->SKI* lambda->BCKW*]]
    [combinator-playground.utils :refer [replace*]]))
 
 ;;; Solutions for https://dallaylaen.github.io/ski-interpreter/quest.html
-
-(defn lambda->BCKW* [expr]
-  (let [ski (lambda->SKI* expr)]
-    (concat
-     (vec ski)
-     [(last (reduce* BCKW (SKI->BCKW (last ski))))])))
 
 (defn lambda->X* [expr]
   (let [ski (lambda->SKI* expr)]
@@ -99,8 +92,8 @@
    "3.6 L x y = x (y y) [BCKW]"
    (lambda->BCKW* '[x [y x (y y)]])
 
-   "3.7 U a b = a (b b a) [BCKW]"
-   (lambda->BCKW* '[a [b a (b b a)]])
+   "3.7 U a b = b (a a b) [BCKW]"
+   (lambda->BCKW* '[a [b b (a a b)]])
 
    "3.8 a d a c [BCKW]"
    (lambda->BCKW* '[a [b [c [d a d a c]]]])
