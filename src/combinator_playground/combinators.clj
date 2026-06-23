@@ -8,16 +8,19 @@
 
 (def all-combinators
   "A selection of standard combinators."
-  {'I ^{:arity 1} (fn [x]     x)
-   'K ^{:arity 2} (fn [x _]   x)
-   'S ^{:arity 3} (fn [x y z] (list x z (list y z)))
-   'B ^{:arity 3} (fn [x y z] (list x (list y z)))
-   'C ^{:arity 3} (fn [x y z] (list x z y))
-   'W ^{:arity 2} (fn [x y]   (list x y y))
-   'X ^{:arity 1} (fn [x]     (list x 'S 'K))
-   'M ^{:arity 1} (fn [x]     (list x x))
-   'T ^{:arity 2} (fn [x y]   (list y x))
-   'A ^{:arity 2} (fn [_ y]   y)})
+  {'I  ^{:arity 1} (fn [x]       x)
+   'K  ^{:arity 2} (fn [x _]     x)
+   'S  ^{:arity 3} (fn [x y z]   (list x z (list y z)))
+   'B  ^{:arity 3} (fn [x y z]   (list x (list y z)))
+   'C  ^{:arity 3} (fn [x y z]   (list x z y))
+   'W  ^{:arity 2} (fn [x y]     (list x y y))
+   'X  ^{:arity 1} (fn [x]       (list x 'S 'K))
+   'M  ^{:arity 1} (fn [x]       (list x x))
+   'T  ^{:arity 2} (fn [x y]     (list y x))
+   'A  ^{:arity 2} (fn [_ y]     y)
+   'J  ^{:arity 4} (fn [a b c d] (list a b (list a d c)))
+   'Q₁ ^{:arity 3} (fn [x y z]   (list x (list z y)))
+   'Q1 ^{:arity 3} (fn [x y z]   (list x (list z y)))})
 
 (def SKI
   (select-keys all-combinators '[S K I]))

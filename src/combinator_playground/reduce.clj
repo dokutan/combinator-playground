@@ -32,7 +32,7 @@
         (map (partial reduce-1 combinators) expr)))))
 
 (defn reduce*
-  "Reduce `expr` to normal form."
+  "Reduce `expr` to normal form, returns a vector of all intermediate results."
   [combinators expr & [limit]]
   (loop [expr' nil expr expr steps []]
     (if (or (= expr' expr)
@@ -40,3 +40,7 @@
       steps
       (let [expr' (reduce-1 combinators expr)]
         (recur expr expr' (conj steps expr))))))
+
+(def reduce-last
+  "Reduce `expr` to normal form"
+  (comp last reduce*))

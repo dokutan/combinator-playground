@@ -48,8 +48,8 @@
 
    Example; I from BCKW: (search BCKW 3 ['x] (partial = 'x) 10)"
   [combinators n parms pred limit]
-  (->> (trees (keys combinators) n)
-       (map #(concat % parms))
-       (pmap #(reduce* combinators % limit))
-       (map (juxt first last))
-       (filter #(pred (second %)))))
+  (->> (trees  (keys combinators) n)
+       (map    #(concat % parms))
+       (pmap   #(reduce* combinators % limit))
+       (map    (juxt first last))
+       (filter (comp pred second))))

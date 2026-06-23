@@ -3,7 +3,7 @@
   #_{:clj-kondo/ignore [:refer-all :unused-namespace :unused-referred-var]}
   (:require
    [combinator-playground.combinators :refer :all]
-   [combinator-playground.reduce :refer [reduce*]]
+   [combinator-playground.reduce :refer :all]
    [combinator-playground.lambda :refer [lambda->SKI* lambda->BCKW*]]
    [combinator-playground.quests :refer :all]
    [combinator-playground.search :refer [search]]

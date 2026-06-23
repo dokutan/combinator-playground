@@ -1,10 +1,12 @@
 (ns combinator-playground.quests
   (:require
    [clojure.pprint :as pprint]
-   [combinator-playground.combinators :refer [BCKW->MTAB BCKW->SKI I->SK
-                                              SKI->BCKW SKI->X]]
-   [combinator-playground.lambda :refer [lambda->SKI* lambda->BCKW*]]
-   [combinator-playground.utils :refer [replace*]]))
+   [combinator-playground.combinators :refer [all-combinators BCKW->MTAB
+                                              BCKW->SKI I->SK SKI->BCKW SKI->X]]
+   [combinator-playground.lambda :refer [lambda->BCKW* lambda->SKI*]]
+   [combinator-playground.reduce :refer [reduce-last]]
+   [combinator-playground.search :refer [search]]
+   [combinator-playground.utils :refer [fixpoint replace*]]))
 
 ;;; Solutions for https://dallaylaen.github.io/ski-interpreter/quest.html
 
@@ -134,44 +136,82 @@
    "5.4 W [MTAB]"
    [(BCKW->MTAB 'W)]
 
-   "6.1 J a b c d = a b (a d c)"
+   "6.1 C* a b c d = a b d c"
+   (search (select-keys all-combinators '[B C I R T V]) 2 '[a b c d] (partial = '(a b d c)) 5)
+
+   "6.2 Q a b c = b (a c)"
+   (search (select-keys all-combinators '[B C I R T V]) 2 '[a b c] (partial = '(b (a c))) 5)
+
+   "6.3 Q₁ a b c = b (c a)"
+   (search (select-keys all-combinators '[B C I R T V]) 3 '[a b c] (partial = '(a (c b))) 10)
+
+   "6.4 Q₂ a b c = a (c b)"
+   (search (select-keys all-combinators '[B C I R T V]) 4 '[a b c] (partial = '(b (c a))) 10)
+
+   "6.5 Q₃ a b c = c (a b)"
+   (search (select-keys all-combinators '[B C I R T V]) 2 '[a b c] (partial = '(c (a b))) 5)
+
+   "6.5 Q₄ a b c = c (b a)"
+   (search (select-keys all-combinators '[B C I R T V]) 3 '[a b c] (partial = '(c (b a))) 10)
+
+   "6.7 R₄ a b c d = b c d a"
+   (search (select-keys all-combinators '[B C I R T V]) 4 '[a b c d] (partial = '(b c d a)) 20)
+
+   "7.1 J a b c d = a b (a d c)"
    (lambda->SKI* '[a [b [c [d a b (a d c)]]]])
 
-   "6.2 T x y = y x [IJ]"
+   "7.2 T x y = y x [IJ]"
    '[(J I I)]
 
-   "6.3 Q1 x y z = x (z y) [IJ]"
+   "7.3 Q₁ x y z = x (z y) [IJ]"
    '[(J I)]
 
-   "6.4 B x y z = x (y z) [IJ]"
-   ['(search
-      {'J (fn [a b c d] (list a b (list a d c)))
-       'I (fn [x] x)
-       'T (fn [x y] (list y x))
-       'Q1 (fn [x y z] (list x (list z y)))}
-      7
-      '[x y z]
-      (partial = '(x (y z)))
-      100)
+   "7.4 B x y z = x (y z) [IJ]"
+   ['(search (select-keys all-combinators '[J I T Q₁]) 7 '[x y z] (partial = '(x (y z))) 100)
     "→"
-    '(J T (Q1 T) (J (J T)))
+    '(J T (Q₁ T) (J (J T)))
     "→"
-    (replace* {'T '(J I I) 'Q1 '(J I)} '(J T (Q1 T) (J (J T))))]
+    (replace* {'T '(J I I) 'Q₁ '(J I)} '(J T (Q₁ T) (J (J T))))]
 
-   "6.5 C x y z = x z y [IJ]"
-   ['(search
-      {'J (fn [a b c d] (list a b (list a d c)))
-       'I (fn [x] x)
-       'T (fn [x y] (list y x))
-       'Q1 (fn [x y z] (list x (list z y)))}
-      6
-      '[x y z]
-      (partial = '(x z y))
-      100)
+   "7.5 C x y z = x z y [IJ]"
+   ['(search (select-keys all-combinators '[J I T Q₁]) 6 '[x y z] (partial = '(x z y)) 100)
     "→"
     '(J T (J T) (J T))
     "→"
-    (replace* {'T '(J I I)} '(J T (J T) (J T)))]])
+    (replace* {'T '(J I I)} '(J T (J T) (J T)))]
+
+   "7.6 W x y = x y y"
+   ["Taken from Rosser 1935: works but is not efficient enough"
+    (reduce-last
+     all-combinators
+     (last
+      (fixpoint
+       (partial replace*
+                {'T '(J I I)
+                 'C '((J T) (J T) (J T))
+                 'B '(C (J I C) (J I))})
+       '(C (C (B C (C (B J T) T)) T)))))
+
+    "`search` for a better solution"
+    '(search (select-keys all-combinators '[J I T Q₁ B C]) 7 '[x y] (partial = '(x y y)) 2000)
+    '([(C (J (Q₁ (T T))) (B J T) x y) (x y y)]
+      [(C (J (C (C J I)) T C) x y) (x y y)]
+      [(C (J (C (C J T)) T I) x y) (x y y)])
+    "→"
+    '(C (J (Q₁ (T T))) (B J T))
+
+    "→"
+    (reduce-last
+     all-combinators
+     (replace*
+      {'Q₁ '(J I)
+       'T  '(J I I)
+       'C  '(J (J I I) (J (J I I)) (J (J I I)))
+       'B  '(J (J I I) ((J I) (J I I)) (J (J (J I I))))}
+      '(C (J (Q₁ (T T))) (B J T))))]
+
+   "7.7 I = AA; K = JAA"
+   (search (select-keys all-combinators '[J A]) 3 '[x y] (partial = 'x) 5)])
 
 (defn print-quests []
   (pprint/cl-format true "~{~a\n~{ ~a\n~}\n\n~}" (quests)))
