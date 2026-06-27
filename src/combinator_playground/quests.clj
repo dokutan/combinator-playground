@@ -14,7 +14,7 @@
   (let [ski (lambda->SKI* expr)]
     (concat
      (vec ski)
-     (SKI->X (last ski)))))
+     (list (SKI->X (last ski))))))
 
 (defn quests []
   ["1.1 x→y→y"
@@ -113,7 +113,9 @@
    (lambda->X* '[x x])
 
    "4.3 x→y→y [X]"
-   (lambda->X* '[x [y y]])
+   [(lambda->X* '[x [y y]])
+    "or"
+    '(X (X X))]
 
    "4.4 K [X]"
    (lambda->X* '[x [y x]])
@@ -211,7 +213,66 @@
       '(C (J (Q₁ (T T))) (B J T))))]
 
    "7.7 I = AA; K = JAA"
-   (search (select-keys all-combinators '[J A]) 3 '[x y] (partial = 'x) 5)])
+   (search (select-keys all-combinators '[J A]) 3 '[x y] (partial = 'x) 5)
+
+   "8.1 NOT a; true=K, false=KI"
+   [(lambda->SKI* '[a a (K I) K])
+    '(V (K I) K)]
+
+   "8.2 IF then else cond
+    → cond then else"
+   ['V
+    '(B C T)]
+
+   "8.3 OR x y"
+   ["from nested IF:"
+    '(V (V K K) (V K (K I)))
+    '(V (K K) (V K (K I)))
+    '(S I (K K))
+    "x→y→x x y"
+    (lambda->SKI* '[x [y x x y]])]
+
+   "8.4 AND x y"
+   ["from nested IF:"
+    '(V (V K (K I)) (V (K I) (K I)))
+    '(V (V K (K I)) (K (K I)))
+    '(S S (K (K (K I))))
+    "x→y→x y x"
+    (lambda->SKI* '[x [y x y x]])]
+
+   "8.5 NAND x y"
+   ['(V (V (K I) K) (V K K))
+    '(V (V (K I) K) (K K))]
+
+   "8.6 check→then→else→x→(check x) (then x) (else x)"
+   (lambda->SKI* '[check [then [else [x (check x) (then x) (else x)]]]])
+
+   "9.1 Church numeral 2"
+   (lambda->SKI* '[f [x f (f x)]])
+
+   "9.2 INC n = INC n x y = x (n x y)"
+   (lambda->SKI* '[n [x [y x (n x y)]]])
+
+   "9.3 ADD n m = ADD n m x y = n x (m x y)"
+   (lambda->BCKW* '[n [m [x [y n x (m x y)]]]])
+
+   "9.4 ZERO? n = n (x → FALSE) TRUE"
+   (lambda->BCKW* '[n n (K (K I)) K])
+
+   "9.5 EVEN? n = n NOT TRUE"
+   (lambda->BCKW* '[n n (V (K I) K) K])
+
+   "9.6 DEC n; DEC 0 = 0"
+   (lambda->BCKW* '[n [f [x n [r [i i (r f)]] (K x) I]]])
+
+   "9.7 HALF n"
+   (lambda->BCKW* '[n [f [x n [r [a [b a (r b a)]]] [a [b x]] I f]]])
+
+   "9.8 MULT m n = MULT m n f x = m (n f) x"
+   (lambda->BCKW* '[m [n [f [x m (n f) x]]]])
+
+   "9.9 EXP m n = m n f x = n m f x ; m^n"
+   ['T]])
 
 (defn print-quests []
   (pprint/cl-format true "~{~a\n~{ ~a\n~}\n\n~}" (quests)))
