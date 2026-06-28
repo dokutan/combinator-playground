@@ -159,30 +159,30 @@
    "6.7 R₄ a b c d = b c d a"
    (search (select-keys all-combinators '[B C I R T V]) 4 '[a b c d] (partial = '(b c d a)) 20)
 
-   "7.1 J a b c d = a b (a d c)"
+   "8.1 J a b c d = a b (a d c)"
    (lambda->SKI* '[a [b [c [d a b (a d c)]]]])
 
-   "7.2 T x y = y x [IJ]"
+   "8.2 T x y = y x [IJ]"
    '[(J I I)]
 
-   "7.3 Q₁ x y z = x (z y) [IJ]"
+   "8.3 Q₁ x y z = x (z y) [IJ]"
    '[(J I)]
 
-   "7.4 B x y z = x (y z) [IJ]"
+   "8.4 B x y z = x (y z) [IJ]"
    ['(search (select-keys all-combinators '[J I T Q₁]) 7 '[x y z] (partial = '(x (y z))) 100)
     "→"
     '(J T (Q₁ T) (J (J T)))
     "→"
     (replace* {'T '(J I I) 'Q₁ '(J I)} '(J T (Q₁ T) (J (J T))))]
 
-   "7.5 C x y z = x z y [IJ]"
+   "8.5 C x y z = x z y [IJ]"
    ['(search (select-keys all-combinators '[J I T Q₁]) 6 '[x y z] (partial = '(x z y)) 100)
     "→"
     '(J T (J T) (J T))
     "→"
     (replace* {'T '(J I I)} '(J T (J T) (J T)))]
 
-   "7.6 W x y = x y y"
+   "8.6 W x y = x y y"
    ["Taken from Rosser 1935: works but is not efficient enough"
     (reduce-last
      all-combinators
@@ -212,19 +212,28 @@
        'B  '(J (J I I) ((J I) (J I I)) (J (J (J I I))))}
       '(C (J (Q₁ (T T))) (B J T))))]
 
-   "7.7 I = AA; K = JAA"
+   "8.7 I = AA; K = JAA"
    (search (select-keys all-combinators '[J A]) 3 '[x y] (partial = 'x) 5)
 
-   "8.1 NOT a; true=K, false=KI"
+   "9.1 M₂ x y = (x y) (x y)"
+   (lambda->SKI* '[x [y x y (x y)]])
+
+   "9.2 f x y = (x x) (y y)"
+   (lambda->SKI* '[x [y x x (y y)]])
+
+   "9.1 f x y = x y x"
+   (lambda->SKI* '[x [y x y x]])
+
+   "10.1 NOT a; true=K, false=KI"
    [(lambda->SKI* '[a a (K I) K])
     '(V (K I) K)]
 
-   "8.2 IF then else cond
+   "10.2 IF then else cond
     → cond then else"
    ['V
     '(B C T)]
 
-   "8.3 OR x y"
+   "10.3 OR x y"
    ["from nested IF:"
     '(V (V K K) (V K (K I)))
     '(V (K K) (V K (K I)))
@@ -232,7 +241,7 @@
     "x→y→x x y"
     (lambda->SKI* '[x [y x x y]])]
 
-   "8.4 AND x y"
+   "10.4 AND x y"
    ["from nested IF:"
     '(V (V K (K I)) (V (K I) (K I)))
     '(V (V K (K I)) (K (K I)))
@@ -240,38 +249,38 @@
     "x→y→x y x"
     (lambda->SKI* '[x [y x y x]])]
 
-   "8.5 NAND x y"
+   "10.5 NAND x y"
    ['(V (V (K I) K) (V K K))
     '(V (V (K I) K) (K K))]
 
-   "8.6 check→then→else→x→(check x) (then x) (else x)"
+   "10.6 check→then→else→x→(check x) (then x) (else x)"
    (lambda->SKI* '[check [then [else [x (check x) (then x) (else x)]]]])
 
-   "9.1 Church numeral 2"
+   "11.1 Church numeral 2"
    (lambda->SKI* '[f [x f (f x)]])
 
-   "9.2 INC n = INC n x y = x (n x y)"
+   "11.2 INC n = INC n x y = x (n x y)"
    (lambda->SKI* '[n [x [y x (n x y)]]])
 
-   "9.3 ADD n m = ADD n m x y = n x (m x y)"
+   "11.3 ADD n m = ADD n m x y = n x (m x y)"
    (lambda->BCKW* '[n [m [x [y n x (m x y)]]]])
 
-   "9.4 ZERO? n = n (x → FALSE) TRUE"
+   "11.4 ZERO? n = n (x → FALSE) TRUE"
    (lambda->BCKW* '[n n (K (K I)) K])
 
-   "9.5 EVEN? n = n NOT TRUE"
+   "11.5 EVEN? n = n NOT TRUE"
    (lambda->BCKW* '[n n (V (K I) K) K])
 
-   "9.6 DEC n; DEC 0 = 0"
+   "11.6 DEC n; DEC 0 = 0"
    (lambda->BCKW* '[n [f [x n [r [i i (r f)]] (K x) I]]])
 
-   "9.7 HALF n"
+   "11.7 HALF n"
    (lambda->BCKW* '[n [f [x n [r [a [b a (r b a)]]] [a [b x]] I f]]])
 
-   "9.8 MULT m n = MULT m n f x = m (n f) x"
+   "11.8 MULT m n = MULT m n f x = m (n f) x"
    (lambda->BCKW* '[m [n [f [x m (n f) x]]]])
 
-   "9.9 EXP m n = m n f x = n m f x ; m^n"
+   "11.9 EXP m n = m n f x = n m f x ; m^n"
    ['T]])
 
 (defn print-quests []
