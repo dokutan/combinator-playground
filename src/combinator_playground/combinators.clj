@@ -8,19 +8,40 @@
 
 (def all-combinators
   "A selection of standard combinators."
-  {'I  ^{:arity 1} (fn [x]       x)
-   'K  ^{:arity 2} (fn [x _]     x)
-   'S  ^{:arity 3} (fn [x y z]   (list x z (list y z)))
-   'B  ^{:arity 3} (fn [x y z]   (list x (list y z)))
-   'C  ^{:arity 3} (fn [x y z]   (list x z y))
-   'W  ^{:arity 2} (fn [x y]     (list x y y))
-   'X  ^{:arity 1} (fn [x]       (list x 'S 'K))
-   'M  ^{:arity 1} (fn [x]       (list x x))
-   'T  ^{:arity 2} (fn [x y]     (list y x))
-   'A  ^{:arity 2} (fn [_ y]     y)
-   'J  ^{:arity 4} (fn [a b c d] (list a b (list a d c)))
-   'Q₁ ^{:arity 3} (fn [x y z]   (list x (list z y)))
-   'Q1 ^{:arity 3} (fn [x y z]   (list x (list z y)))})
+  (let [Q1  ^{:arity 3} (fn [x y z]   (list x (list z y)))
+        Q2  ^{:arity 3} (fn [x y z]   (list y (list z x)))
+        Q3  ^{:arity 3} (fn [x y z]   (list z (list x y)))
+        Q4  ^{:arity 3} (fn [x y z]   (list z (list y x)))
+        PHI ^{:arity 4} (fn [f g h x] (list f (list g x) (list h x)))
+        PSI ^{:arity 4} (fn [f g x y] (list f (list g x) (list g y)))]
+    {'A    ^{:arity 2} (fn [_ y]     y)
+     'B    ^{:arity 3} (fn [x y z]   (list x (list y z)))
+     'C    ^{:arity 3} (fn [x y z]   (list x z y))
+     'D    ^{:arity 4} (fn [a b c d] (list a b (list c d)))
+     'I    ^{:arity 1} (fn [x]       x)
+     'J    ^{:arity 4} (fn [a b c d] (list a b (list a d c)))
+     'K    ^{:arity 2} (fn [x _]     x)
+     'L    ^{:arity 2} (fn [x y]     (list x (list y y)))
+     'M    ^{:arity 1} (fn [x]       (list x x))
+     'Q    ^{:arity 3} (fn [x y z]   (list y (list x z)))
+     'Q1   Q1
+     'Q₁   Q1
+     'Q2   Q2
+     'Q₂   Q2
+     'Q3   Q3
+     'Q₃   Q3
+     'Q4   Q4
+     'Q₄   Q4
+     'R    ^{:arity 3} (fn [x y z]   (list y z x))
+     'S    ^{:arity 3} (fn [x y z]   (list x z (list y z)))
+     'T    ^{:arity 2} (fn [x y]     (list y x))
+     'V    ^{:arity 3} (fn [x y z]   (list z x y))
+     'W    ^{:arity 2} (fn [x y]     (list x y y))
+     'X    ^{:arity 1} (fn [x]       (list x 'S 'K))
+     'Φ    PHI
+     'PHI  PHI
+     'Ψ    PSI
+     'PSI  PSI}))
 
 (def SKI
   (select-keys all-combinators '[S K I]))

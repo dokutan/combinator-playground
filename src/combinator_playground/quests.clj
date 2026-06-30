@@ -159,6 +159,10 @@
    "6.7 R₄ a b c d = b c d a"
    (search (select-keys all-combinators '[B C I R T V]) 4 '[a b c d] (partial = '(b c d a)) 20)
 
+   "7.3 M x = x x; given triple x = x x x, B C I K T V"
+   ['(search (into (select-keys all-combinators '[B C I K T V]) {'triple (fn [x] (list x x x))}) 6 '[x] (partial = '(x x)) 200)
+    '(B triple (B B (V K)))]
+
    "8.1 J a b c d = a b (a d c)"
    (lambda->SKI* '[a [b [c [d a b (a d c)]]]])
 
