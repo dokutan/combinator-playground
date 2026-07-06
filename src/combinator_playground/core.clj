@@ -7,6 +7,7 @@
    [combinator-playground.lambda :refer [lambda->SKI* lambda->BCKW*]]
    [combinator-playground.quests :refer :all]
    [combinator-playground.riddle :refer :all]
+   [combinator-playground.utils  :refer :all]
    [combinator-playground.search :refer [search]]
    [clj-async-profiler.core :as prof]))
 

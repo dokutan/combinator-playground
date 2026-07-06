@@ -39,3 +39,48 @@
          :else
          term))
      expr)))
+
+(defn over
+  "A variadic version of the Ψ combinator.
+   `((over f g) x y z …) = (f (g x) (g y) (g z) …)`"
+  [f g]
+  (fn [& args] (apply f (map g args))))
+
+(defn fork
+  "A variadic version of the Φ combinator.
+   `((fork f g h …) x y …) = (f (g x y …) (h x y …) …)`"
+  [f & fns]
+  (fn [& x] (apply f (map #(apply % x) fns))))
+
+(def and-fn
+  "`and` as a function."
+  (fn [& xs]
+    (reduce #(and %1 %2) true xs)))
+
+(def or-fn
+  "`or` as a function."
+  (fn [& xs]
+    (reduce #(or %1 %2) nil xs)))
+
+(def symbols
+  "Get a set of symbols in `expr`"
+  (comp set flatten list))
+
+(defn rules->replacements
+  "Given a list of `rules` and a `basis`,
+   construct a map of replacements for all combinators that can be expressed in `basis`"
+  [rules basis]
+  (loop [replacements (reduce into {} (map (fn [sym] {sym sym}) basis))]
+    (let [new-replacements
+          (->> rules
+               (map (fn [[sym expr]]
+                      ;; all symbols in `expr` in replacements ?
+                      (if (empty? (remove (set (keys replacements)) (symbols expr)))
+                        {sym (replace* replacements expr)}
+                        {})))
+               (reduce into {}))
+          ;; TODO choose better option ?
+          new-replacements (into new-replacements replacements)]
+      (if ((over = keys) new-replacements replacements)
+        new-replacements
+        (recur new-replacements)))))
