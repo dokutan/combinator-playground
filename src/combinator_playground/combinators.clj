@@ -41,7 +41,10 @@
      'Φ    PHI
      'PHI  PHI
      'Ψ    PSI
-     'PSI  PSI}))
+     'PSI  PSI
+     'B'   ^{:arity 4} (fn [a b c d] (list a b (list c d)))
+     'C'   ^{:arity 4} (fn [a b c d] (list a (list b d) c))
+     'S'   PHI}))
 
 (def SKI
   (select-keys all-combinators '[S K I]))
