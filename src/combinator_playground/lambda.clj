@@ -1,6 +1,6 @@
 (ns combinator-playground.lambda
   (:require
-   [combinator-playground.utils :refer [fixpoint unwrap]]))
+   [combinator-playground.utils :refer [arity fixpoint unwrap]]))
 
 ;;; Conversion of lambda calculus to combinator calculus through bracket abstraction.
 ;;; References:
@@ -8,6 +8,27 @@
 ;;; - https://www.cantab.net/users/antoni.diller/brackets/intro.html
 ;;; - https://www.sciencedirect.com/science/article/pii/S1571066120300116
 ;;; - D. A. Turner 1979: Another Algorithm for Bracket Abstraction
+
+(defn combinators->lambda
+  "Convert `combinators` in `expr` to lambda expressions."
+  [combinators expr]
+  (cond
+    (and (symbol? expr) (combinators expr))
+    (let [args   (map (comp symbol str char (partial + 97)) (range (arity (combinators expr))))
+          result (apply (combinators expr) args)]
+      (loop [args args
+             result result]
+        (if (empty? args)
+          result
+          (recur (butlast args) [(last args) result]))))
+
+    (symbol? expr)
+    expr
+
+    :else
+    (map
+     (partial combinators->lambda combinators)
+     expr)))
 
 (defn not-in?
   "Returns true if `sym` does not occur in `expr`."

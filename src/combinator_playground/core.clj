@@ -4,7 +4,7 @@
   (:require
    [combinator-playground.combinators :refer :all]
    [combinator-playground.reduce :refer :all]
-   [combinator-playground.lambda :refer [lambda->SKI* lambda->BCKW* lambda->SKIBC* lambda->SKIBC'*]]
+   [combinator-playground.lambda :refer :all]
    [combinator-playground.quests :refer :all]
    [combinator-playground.riddle :refer :all]
    [combinator-playground.utils  :refer :all]

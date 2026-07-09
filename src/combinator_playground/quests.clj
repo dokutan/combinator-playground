@@ -293,7 +293,28 @@
    ['T]
 
    "12.1 MAP f (V a b) = V(f a)(f b) ; (V … …) = pair"
-   (lambda->SKIBC* '[f [pair (V (f (pair K)) (f (pair (K I))))]])])
+   (lambda->SKIBC* '[f [pair (V (f (pair K)) (f (pair (K I))))]])
+
+   "12.2 f g (V a b) → f a (g b)"
+   (lambda->SKIBC* '[f [g [pair f (pair K) (g (pair (K I)))]]])
+
+   "12.3 f g (V a b) → V (f a b) (g a b)"
+   (lambda->SKIBC* '[f [g [pair V (f (pair K) (pair (K I))) (g (pair K) (pair (K I)))]]])
+
+   ;;"12.4 f d (V a b) → f a b; f d (K I) → d"
+
+   "12.5 triplet"
+   ["triplet a b c"
+    (lambda->SKIBC* '[a [b [c V a (V b c)]]])
+    "first"
+    (lambda->SKIBC* '[triplet triplet K])
+    "second"
+    (lambda->SKIBC* '[triplet triplet (K I) K])
+    "third"
+    (lambda->SKIBC* '[triplet triplet (K I) (K I)])]
+
+   "13.1 lst a b f z = f a (b f z)"
+   (lambda->SKIBC* '[a [b [f [z f a (b f z)]]]])])
 
 (defn print-quests []
   (pprint/cl-format true "~{~a\n~{ ~a\n~}\n\n~}" (quests)))

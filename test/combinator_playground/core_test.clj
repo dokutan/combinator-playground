@@ -3,8 +3,7 @@
    [clojure.test :refer :all]
    [combinator-playground.combinators :refer [all-combinators all-rules SKI]]
    [combinator-playground.core :refer :all]
-   [combinator-playground.lambda :refer [lambda->BCKW* lambda->SKI*
-                                         lambda->SKIBC'* lambda->SKIBC*]]
+   [combinator-playground.lambda :refer :all]
    [combinator-playground.reduce :refer [reduce* reduce-last]]
    [combinator-playground.utils :refer :all]))
 
@@ -40,6 +39,19 @@
     (is (= '(K I)                           (last (lambda->SKIBC'* '[x [y y]]))))
     (is (= '(S (C' S' I I) I)               (last (lambda->SKIBC'* '[x [y x y (x y)]]))))
     (is (= '(B' S I (C I))                  (last (lambda->SKIBC'* '[x [y y (y x)]]))))))
+
+(deftest combinators->lambda-test
+  (run!
+   (fn [[combinator replacement]]
+     (let [args (range (arity (all-combinators combinator)))]
+       (is (= (reduce-last
+               all-combinators
+               (concat (list (last (lambda->SKIBC* (combinators->lambda all-combinators replacement)))) args))
+              (reduce-last
+               all-combinators
+               (concat (list replacement) args)))
+           (str replacement))))
+   all-rules))
 
 (deftest rules-test
   (run!
