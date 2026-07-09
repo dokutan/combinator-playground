@@ -46,6 +46,43 @@
      'C'   ^{:arity 4} (fn [a b c d] (list a (list b d) c))
      'S'   PHI}))
 
+(def all-rules
+  "A list of common combinator definitions. Useful with `utils/rules->replacements`."
+  [['I '(S K K)]
+   ;; BCKW->SKI
+   ['B '(S (K S) K)]
+   ['C '(S (S (K S) (S (K K) S)) (K K))]
+   ['W '(S S (K I))]
+   ;; SKI->BCKW
+   ['S '(B (B W) (B B C))]
+   ['I '(W K)]
+   ;; SKI->X
+   ['S '(X (X (X (X X))))]
+   ['K '(X (X (X X)))]
+   ['I '(X X)]
+   ;; MTAB->BCKW
+   ['T '(C (C K C))]
+   ['A '(K (C K C))]
+   ['M '(W (C K C))]
+   ;; BCKW->MTAB
+   ['C '((B B T) (B B T) (B B T))]
+   ['K '(B (T A) (B B T))]
+   ['W '((B B T) (B B T) (B B T) (B M (B B T)))]
+   ;; JA
+   ['K '(J A A)]
+   ['I '(A A)]
+   ;; JI, see Rosser 1935
+   ['T '(J I I)]
+   ['C '(J T (J T) (J T))]
+   ['B '(C (J I C) (J I))]
+   ['W '(C (C (B C (C (B J T) T)) T))]
+   ;; other combinator definitions
+   ['L '(C B M)]
+   ['M '(S I I)]
+   ['D '(B B)]
+   ['Q '(C B)]
+   ['V '(B C T)]])
+
 (def SKI
   (select-keys all-combinators '[S K I]))
 

@@ -1,11 +1,12 @@
 (ns combinator-playground.core-test
   (:require
    [clojure.test :refer :all]
-   [combinator-playground.combinators :refer [SKI]]
+   [combinator-playground.combinators :refer [all-combinators all-rules SKI]]
    [combinator-playground.core :refer :all]
    [combinator-playground.lambda :refer [lambda->BCKW* lambda->SKI*
-                                         lambda->SKIBC* lambda->SKIBC'*]]
-   [combinator-playground.reduce :refer [reduce*]]))
+                                         lambda->SKIBC'* lambda->SKIBC*]]
+   [combinator-playground.reduce :refer [reduce* reduce-last]]
+   [combinator-playground.utils :refer :all]))
 
 ;; (deftest a-test
 ;;   (testing "FIXME, I fail."
@@ -39,3 +40,19 @@
     (is (= '(K I)                           (last (lambda->SKIBC'* '[x [y y]]))))
     (is (= '(S (C' S' I I) I)               (last (lambda->SKIBC'* '[x [y x y (x y)]]))))
     (is (= '(B' S I (C I))                  (last (lambda->SKIBC'* '[x [y y (y x)]]))))))
+
+(deftest rules-test
+  (run!
+   (fn [[combinator replacement]]
+     (let [args (range (arity (all-combinators combinator)))]
+       (is (= (reduce-last all-combinators (concat (list combinator) args))
+              (reduce-last all-combinators (concat (list replacement) args)))
+           (str combinator " ≠ " replacement))))
+   all-rules))
+
+(deftest complexity-test
+  (is (= 1 (complexity 'x)))
+  (is (= 1 (complexity '(x))))
+  (is (= 2 (complexity '(x x))))
+  (is (= 3 (complexity '(x x x))))
+  (is (= 4 (complexity '(x (x x))))))

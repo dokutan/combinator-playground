@@ -66,6 +66,15 @@
   "Get a set of symbols in `expr`"
   (comp set flatten list))
 
+(defn complexity
+  "Count symbols and parentheses in `expr`"
+  [expr]
+  (if-not (coll? expr)
+    1
+    (reduce +
+            (count expr)
+            (map complexity (filter coll? expr)))))
+
 (defn rules->replacements
   "Given a list of `rules` and a `basis`,
    construct a map of replacements for all combinators that can be expressed in `basis`"
@@ -79,8 +88,8 @@
                         {sym (replace* replacements expr)}
                         {})))
                (reduce into {}))
-          ;; TODO choose better option ?
-          new-replacements (into new-replacements replacements)]
+          new-replacements
+          (merge-with #(if ((over < complexity) %1 %2) %1 %2) new-replacements replacements)]
       (if ((over = keys) new-replacements replacements)
         new-replacements
         (recur new-replacements)))))

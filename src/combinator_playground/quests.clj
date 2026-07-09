@@ -225,7 +225,7 @@
    "9.2 f x y = (x x) (y y)"
    (lambda->SKI* '[x [y x x (y y)]])
 
-   "9.1 f x y = x y x"
+   "9.3 f x y = x y x"
    (lambda->SKI* '[x [y x y x]])
 
    "10.1 NOT a; true=K, false=KI"
