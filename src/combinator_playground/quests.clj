@@ -1,12 +1,14 @@
 (ns combinator-playground.quests
   (:require
    [clojure.pprint :as pprint]
-   [combinator-playground.combinators :refer [all-combinators BCKW->MTAB
-                                              BCKW->SKI I->SK SKI->BCKW SKI->X]]
-   [combinator-playground.lambda :refer [lambda->BCKW* lambda->SKI*]]
+   [combinator-playground.combinators :refer [all-combinators all-rules
+                                              BCKW->MTAB BCKW->SKI I->SK
+                                              SKI->BCKW SKI->X]]
+   [combinator-playground.lambda :refer [lambda->BCKW* lambda->SKI*
+                                         lambda->SKIBC*]]
    [combinator-playground.reduce :refer [reduce-last]]
    [combinator-playground.search :refer [search]]
-   [combinator-playground.utils :refer [fixpoint replace*]]))
+   [combinator-playground.utils :refer [fixpoint replace* rules->replacements]]))
 
 ;;; Solutions for https://dallaylaen.github.io/ski-interpreter/quest.html
 
@@ -159,6 +161,9 @@
    "6.7 R₄ a b c d = b c d a"
    (search (select-keys all-combinators '[B C I R T V]) 4 '[a b c d] (partial = '(b c d a)) 20)
 
+   "7.1 I [BKT]"
+   [(reduce-last all-combinators ((rules->replacements all-rules '[B K T]) 'I))]
+
    "7.3 M x = x x; given triple x = x x x, B C I K T V"
    ['(search (into (select-keys all-combinators '[B C I K T V]) {'triple (fn [x] (list x x x))}) 6 '[x] (partial = '(x x)) 200)
     '(B triple (B B (V K)))]
@@ -285,7 +290,10 @@
    (lambda->BCKW* '[m [n [f [x m (n f) x]]]])
 
    "11.9 EXP m n = m n f x = n m f x ; m^n"
-   ['T]])
+   ['T]
+
+   "12.1 MAP f (V a b) = V(f a)(f b) ; (V … …) = pair"
+   (lambda->SKIBC* '[f [pair (V (f (pair K)) (f (pair (K I))))]])])
 
 (defn print-quests []
   (pprint/cl-format true "~{~a\n~{ ~a\n~}\n\n~}" (quests)))
