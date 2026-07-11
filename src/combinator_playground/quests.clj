@@ -314,7 +314,16 @@
     (lambda->SKIBC* '[triplet triplet (K I) (K I)])]
 
    "13.1 lst a b f z = f a (b f z)"
-   (lambda->SKIBC* '[a [b [f [z f a (b f z)]]]])])
+   (lambda->SKIBC* '[a [b [f [z f a (b f z)]]]])
+
+   "13.2 len lst = lst (K inc) 0"
+   (lambda->SKIBC* '[l l (K [n [x [y x (n x y)]]]) (K I)])
+
+   "13.3 cat a b"
+   (lambda->SKIBC* '[a [b [f [x a f (b f x)]]]])
+
+   "17.1 M x = x"
+   ['I]])
 
 (defn print-quests []
   (pprint/cl-format true "~{~a\n~{ ~a\n~}\n\n~}" (quests)))
