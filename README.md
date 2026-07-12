@@ -44,3 +44,4 @@ graph TD;
 
 - https://dallaylaen.github.io/ski-interpreter/quest.html (solutions for some quests are in [quests.clj](src/combinator_playground/quests.clj))
 - https://blog.happyfellow.dev/a-riddle/ ([riddle.txt](resources/riddle.txt) and a solution in [riddle.clj](src/combinator_playground/riddle.clj))
+- https://combinatorylogic.com/table.html
