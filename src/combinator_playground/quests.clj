@@ -155,7 +155,7 @@
    "6.5 Q₃ a b c = c (a b)"
    (search (select-keys all-combinators '[B C I R T V]) 2 '[a b c] (partial = '(c (a b))) 5)
 
-   "6.5 Q₄ a b c = c (b a)"
+   "6.6 Q₄ a b c = c (b a)"
    (search (select-keys all-combinators '[B C I R T V]) 3 '[a b c] (partial = '(c (b a))) 10)
 
    "6.7 R₄ a b c d = b c d a"
@@ -233,6 +233,9 @@
    "9.3 f x y = x y x"
    (lambda->SKI* '[x [y x y x]])
 
+   "9.4 Φ a b c d = a (b d) (c d)"
+   (lambda->SKIBC* '[a [b [c [d a (b d) (c d)]]]])
+
    "10.1 NOT a; true=K, false=KI"
    [(lambda->SKI* '[a a (K I) K])
     '(V (K I) K)]
@@ -301,9 +304,10 @@
    "12.3 f g (V a b) → V (f a b) (g a b)"
    (lambda->SKIBC* '[f [g [pair V (f (pair K) (pair (K I))) (g (pair K) (pair (K I)))]]])
 
-   ;;"12.4 f d (V a b) → f a b; f d (K I) → d"
+   "12.4 f d (V a b) → f a b; f d (K I) → d"
+   (lambda->SKIBC* '[f [d [x x [a [b [_ f a b]]] d]]])
 
-   "12.5 triplet"
+   "12.5 triplet [(V a b) K = a; (V a b) (K I) = b]"
    ["triplet a b c"
     (lambda->SKIBC* '[a [b [c V a (V b c)]]])
     "first"
@@ -321,6 +325,9 @@
 
    "13.3 cat a b"
    (lambda->SKIBC* '[a [b [f [x a f (b f x)]]]])
+
+   "14.4 Y f = f (Y f); Y = f → (x → f (x x)) (x → f (x x))"
+   (lambda->SKIBC* '[f [x f (x x)] [x f (x x)]])
 
    "17.1 M x = x"
    ['I]])

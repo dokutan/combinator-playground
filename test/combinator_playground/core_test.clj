@@ -53,6 +53,18 @@
            (str replacement))))
    all-rules))
 
+(deftest combinators-arity-test
+  (run!
+   (fn [f]
+     (is (= (:arity (meta f))
+            (-> f
+                .getClass
+                .getDeclaredMethods
+                first
+                .getParameterCount))
+         (str "wrong arity in metadata: " f)))
+   (vals all-combinators)))
+
 (deftest rules-test
   (run!
    (fn [[combinator replacement]]
