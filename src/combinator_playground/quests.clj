@@ -3,7 +3,7 @@
    [clojure.pprint :as pprint]
    [combinator-playground.combinators :refer [all-combinators all-rules
                                               BCKW->MTAB BCKW->SKI I->SK
-                                              SKI->BCKW SKI->X]]
+                                              SKI->BCKW SKI->iota]]
    [combinator-playground.lambda :refer [lambda->BCKW* lambda->SKI*
                                          lambda->SKIBC*]]
    [combinator-playground.reduce :refer [reduce-last]]
@@ -12,11 +12,11 @@
 
 ;;; Solutions for https://dallaylaen.github.io/ski-interpreter/quest.html
 
-(defn lambda->X* [expr]
+(defn lambda->iota* [expr]
   (let [ski (lambda->SKI* expr)]
     (concat
      (vec ski)
-     (list (SKI->X (last ski))))))
+     (list (SKI->iota (last ski))))))
 
 (defn quests []
   ["1.1 x→y→y"
@@ -108,22 +108,22 @@
    "3.10 S [BCKW]"
    [(SKI->BCKW 'S)]
 
-   "4.1 X = x → x(S)(K)"
+   "4.1 iota = x → x(S)(K)"
    (lambda->SKI* '[x x S K])
 
-   "4.2 I [X]"
-   (lambda->X* '[x x])
+   "4.2 I [ι]"
+   (lambda->iota* '[x x])
 
-   "4.3 x→y→y [X]"
-   [(lambda->X* '[x [y y]])
+   "4.3 x→y→y [ι]"
+   [(lambda->iota* '[x [y y]])
     "or"
-    '(X (X X))]
+    '(ι (ι ι))]
 
-   "4.4 K [X]"
-   (lambda->X* '[x [y x]])
+   "4.4 K [ι]"
+   (lambda->iota* '[x [y x]])
 
-   "4.5 S [X]"
-   (lambda->X* '[x [y [z x z (y z)]]])
+   "4.5 S [ι]"
+   (lambda->iota* '[x [y [z x z (y z)]]])
 
    "5.1 I [MTAB]"
    ['(A M)

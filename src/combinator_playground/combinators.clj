@@ -21,7 +21,8 @@
         Q4  ^{:arity 3} (fn [x y z]     (list z (list y x)))
         W1  ^{:arity 2} (fn [x y]       (list y x x))
         PHI ^{:arity 4} (fn [f g h x]   (list f (list g x) (list h x)))
-        PSI ^{:arity 4} (fn [f g x y]   (list f (list g x) (list g y)))]
+        PSI ^{:arity 4} (fn [f g x y]   (list f (list g x) (list g y)))
+        iota ^{:arity 1} (fn [x]        (list x 'S 'K))]
     {'A    ^{:arity 2} (fn [_ y]     y)
      'B    ^{:arity 3} (fn [x y z]     (list x (list y z)))
      'B1   B1
@@ -78,7 +79,8 @@
      'W¹   W1
      'W*   ^{:arity 3} (fn [x y z]     (list x y z z))
      'W**  ^{:arity 4} (fn [a b c d]   (list a b c d d))
-     'X    ^{:arity 1} (fn [x]         (list x 'S 'K))
+     'ι    iota
+     'iota iota
      'Φ    PHI
      'PHI  PHI
      'Ψ    PSI
@@ -97,10 +99,11 @@
    ;; SKI->BCKW
    ['S '(B (B W) (B B C))]
    ['I '(W K)]
-   ;; SKI->X
-   ['S '(X (X (X (X X))))]
-   ['K '(X (X (X X)))]
-   ['I '(X X)]
+   ;; SKI->iota
+   ['S '(ι K)]
+   ['K '(ι A)]
+   ['A '(ι I)]
+   ['I '(ι ι)]
    ;; MTAB->BCKW
    ['T '(C (C K C))]
    ['A '(K (C K C))]
@@ -173,6 +176,8 @@
    ['W1 'W¹]
    ['W* '(B W)]
    ['W** '(B W*)]
+   ['ι 'iota]
+   ['iota 'ι]
    ['Φ '(B₁ S B)]
    ['Φ 'PHI]
    ['PHI 'Φ]
@@ -187,9 +192,6 @@
 
 (def BCKW
   (select-keys all-combinators '[B C K W]))
-
-(def XSKI
-  (select-keys all-combinators '[X S K I]))
 
 (def MTAB
   (select-keys all-combinators '[M T A B]))
@@ -212,12 +214,12 @@
    replace*
    {'I '(S K K)}))
 
-(def SKI->X
+(def SKI->iota
   (partial
    replace*
-   {'S '(X (X (X (X X))))
-    'K '(X (X (X X)))
-    'I '(X X)}))
+   {'S '(ι (ι (ι (ι ι))))
+    'K '(ι (ι (ι ι)))
+    'I '(ι ι)}))
 
 (def MTAB->BCKW
   (partial
