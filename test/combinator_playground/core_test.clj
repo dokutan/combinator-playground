@@ -7,10 +7,6 @@
    [combinator-playground.reduce :refer [reduce* reduce-last]]
    [combinator-playground.utils :refer :all]))
 
-;; (deftest a-test
-;;   (testing "FIXME, I fail."
-;;     (is (= 0 1))))
-
 (deftest SKI-test
   (is (= 'x     (last (reduce* SKI '(I x)))))
   (is (= 'x     (last (reduce* SKI '(K x y)))))
@@ -66,13 +62,29 @@
    (vals all-combinators)))
 
 (deftest rules-test
+  ;; combinator = replacement ?
   (run!
    (fn [[combinator replacement]]
      (let [args (range (arity (all-combinators combinator)))]
        (is (= (reduce-last all-combinators (concat (list combinator) args))
               (reduce-last all-combinators (concat (list replacement) args)))
            (str combinator " ≠ " replacement))))
-   all-rules))
+   all-rules)
+  ;; combinator = combinator as SKI = combinator as BCKW ?
+  (let [->SKI  (rules->replacements all-rules '[S K I])
+        ->BCKW (rules->replacements all-rules '[B C K W])]
+    (run!
+     (fn [[combinator _]]
+       (let [args (range (arity (all-combinators combinator)))]
+         (when-let [as-SKI (->SKI combinator)]
+           (is (= (reduce-last all-combinators (concat (list combinator) args))
+                  (reduce-last all-combinators (concat (list as-SKI) args)))
+               (str combinator " ≠ " as-SKI)))
+         (when-let [as-BCKW (->BCKW combinator)]
+           (is (= (reduce-last all-combinators (concat (list combinator) args))
+                  (reduce-last all-combinators (concat (list as-BCKW) args)))
+               (str combinator " ≠ " as-BCKW)))))
+     all-rules)))
 
 (deftest complexity-test
   (is (= 1 (complexity 'x)))
