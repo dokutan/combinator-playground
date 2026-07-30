@@ -1,5 +1,6 @@
 (ns combinator-playground.lambda
   (:require
+   [clojure.string :as str]
    [combinator-playground.utils :refer [arity fixpoint unwrap]]))
 
 ;;; Conversion of lambda calculus to combinator calculus through bracket abstraction.
@@ -29,6 +30,19 @@
     (map
      (partial combinators->lambda combinators)
      expr)))
+
+(defn lambda->str
+  "Formats a lambda term. TODO handle all cases correctly."
+  [expr]
+  (cond
+    (vector? expr)
+    (str "λ" (first expr) "." (str/join " " (map lambda->str (rest expr))))
+
+    (seq? expr)
+    (str "(" (str/join " " (map lambda->str expr)) ")")
+
+    :else
+    (str expr)))
 
 (defn not-in?
   "Returns true if `sym` does not occur in `expr`."

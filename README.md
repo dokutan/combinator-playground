@@ -40,6 +40,59 @@ graph TD;
     BCKW-->|BCKW->MTAB|MTAB;
 ```
 
+Builtin combinators:
+Symbols | Function Abstraction | SKI | BCKW
+---|---|---|---
+`A` | λa.λb.b | `(K ((S (S (K S) (S (K K) S)) (K K)) K (S (S (K S) (S (K K) S)) (K K))))` | `(K (C K C))`
+`B'`, `D` | λa.λb.λc.λd.(a b (c d)) | `((S (K S) K) (S (K S) K))` | `(B B)`
+`B1`, `B₁` | λa.λb.λc.λd.(a (b c d)) | `(((S (K S) K) (S (K S) K)) (S (K S) K))` | `((B B) B)`
+`B2`, `B₂` | λa.λb.λc.λd.λe.(a (b c d e)) | `(((S (K S) K) (S (K S) K)) (((S (K S) K) (S (K S) K)) (S (K S) K)))` | `((B B) ((B B) B))`
+`B3`, `B₃` | λa.λb.λc.λd.(a (b (c d))) | `((S (K S) K) ((S (K S) K) (S (K S) K)) (S (K S) K))` | `(B (B B) B)`
+`B` | λa.λb.λc.(a (b c)) | `(S (K S) K)` | `B`
+`C'` | λa.λb.λc.λd.(a (b d) c) |  |
+`C**` | λa.λb.λc.λd.λe.(a b c e d) | `((S (K S) K) ((S (K S) K) (S (S (K S) (S (K K) S)) (K K))))` | `(B (B C))`
+`C*` | λa.λb.λc.λd.(a b d c) | `((S (K S) K) (S (S (K S) (S (K K) S)) (K K)))` | `(B C)`
+`C` | λa.λb.λc.(a c b) | `(S (S (K S) (S (K K) S)) (K K))` | `C`
+`D1`, `D₁` | λa.λb.λc.λd.λe.(a b c (d e)) | `((S (K S) K) ((S (K S) K) (S (K S) K)))` | `(B (B B))`
+`D2`, `D₂` | λa.λb.λc.λd.λe.(a (b c) (d e)) | `(((S (K S) K) (S (K S) K)) ((S (K S) K) (S (K S) K)))` | `((B B) (B B))`
+`E` | λa.λb.λc.λd.λe.(a b (c d e)) | `((S (K S) K) (((S (K S) K) (S (K S) K)) (S (K S) K)))` | `(B ((B B) B))`
+`F**` | λa.λb.λc.λd.λe.(a b e d c) | `((S (K S) K) ((S (K S) K) ((S (K S) K) (S (S (K S) (S (K K) S)) (K K))) (((S (K S) K) (S (S (K S) (S (K K) S)) (K K))) ((S (K S) K) (S (S (K S) (S (K K) S)) (K K))))))` | `(B (B (B C) ((B C) (B C))))`
+`F*` | λa.λb.λc.λd.(a d c b) | `((S (K S) K) ((S (K S) K) (S (S (K S) (S (K K) S)) (K K))) (((S (K S) K) (S (S (K S) (S (K K) S)) (K K))) ((S (K S) K) (S (S (K S) (S (K K) S)) (K K)))))` | `(B (B C) ((B C) (B C)))`
+`F` | λa.λb.λc.(c b a) | `(((S (K S) K) (((S (K S) K) (S (K S) K)) (S (K S) K))) ((S (S (K S) (S (K K) S)) (K K)) I) ((S (S (K S) (S (K K) S)) (K K)) I) ((S (K S) K) (((S (K S) K) (S (K S) K)) (S (K S) K))) ((S (S (K S) (S (K K) S)) (K K)) I))` | `((B ((B B) B)) (C (W K)) (C (W K)) (B ((B B) B)) (C (W K)))`
+`G` | λa.λb.λc.λd.(a d (b c)) | `(((S (K S) K) (S (K S) K)) (S (S (K S) (S (K K) S)) (K K)))` | `((B B) C)`
+`H` | λa.λb.λc.(a b c b) | `((S (K S) K) (S S (K I)) ((S (K S) K) (S (S (K S) (S (K K) S)) (K K))))` | `(B W (B C))`
+`I*` | λa.λb.(a b) | `(S (S K))` | `((B (B W) (B B C)) ((B (B W) (B B C)) K))`
+`I` | λa.a | `I` | `(W K)`
+`J` | λa.λb.λc.λd.(a b (a d c)) |  |
+`K` | λa.λb.a | `K` | `K`
+`L` | λa.λb.(a (b b)) | `((S (S (K S) (S (K K) S)) (K K)) (S (K S) K) (S I I))` | `(C B (W (C K C)))`
+`M2`, `M₂` | λa.λb.(a b (a b)) |  |
+`M` | λa.(a a) | `(S I I)` | `(W (C K C))`
+`N` | λa.λb.λc.λd.(a b (c b d)) |  |
+`O` | λa.λb.(b (a b)) | `(S I)` | `((B (B W) (B B C)) (W K))`
+`PHI`, `S'`, `Φ` | λa.λb.λc.λd.(a (b d) (c d)) | `((((S (K S) K) (S (K S) K)) (S (K S) K)) S (S (K S) K))` | `(((B B) B) (B (B W) (B B C)) B)`
+`PSI`, `Ψ` | λa.λb.λc.λd.(a (b c) (b d)) | `((S (K S) K) (S ((((S (K S) K) (S (K S) K)) (S (K S) K)) S (S (K S) K)) (S (S (K S) (S (K K) S)) (K K)) (S (K S) K)) (S (K S) K))` | `(B ((B (B W) (B B C)) (((B B) B) (B (B W) (B B C)) B) C B) B)`
+`Q1`, `Q₁` | λa.λb.λc.(a (c b)) | `((S (K S) K) (S (S (K S) (S (K K) S)) (K K)) (S (K S) K))` | `(B C B)`
+`Q2`, `Q₂` | λa.λb.λc.(b (c a)) | `((S (S (K S) (S (K K) S)) (K K)) ((S (K S) K) (S (S (K S) (S (K K) S)) (K K)) (S (K S) K)))` | `(C (B C B))`
+`Q3`, `Q₃` | λa.λb.λc.(c (a b)) | `((S (K S) K) ((S (S (K S) (S (K K) S)) (K K)) I))` | `(B (C (W K)))`
+`Q4`, `Q₄` | λa.λb.λc.(c (b a)) | `(((S (K S) K) ((S (K S) K) (S (S (K S) (S (K K) S)) (K K))) (((S (K S) K) (S (S (K S) (S (K K) S)) (K K))) ((S (K S) K) (S (S (K S) (S (K K) S)) (K K))))) (S (K S) K))` | `((B (B C) ((B C) (B C))) B)`
+`Q` | λa.λb.λc.(b (a c)) | `((S (S (K S) (S (K K) S)) (K K)) (S (K S) K))` | `(C B)`
+`R**` | λa.λb.λc.λd.λe.(a b d e c) | `((S (K S) K) (((S (K S) K) (S (S (K S) (S (K K) S)) (K K))) ((S (K S) K) (S (S (K S) (S (K K) S)) (K K)))))` | `(B ((B C) (B C)))`
+`R*` | λa.λb.λc.λd.(a c d b) | `(((S (K S) K) (S (S (K S) (S (K K) S)) (K K))) ((S (K S) K) (S (S (K S) (S (K K) S)) (K K))))` | `((B C) (B C))`
+`R` | λa.λb.λc.(b c a) | `(((S (K S) K) (S (K S) K)) ((S (S (K S) (S (K K) S)) (K K)) I))` | `((B B) (C (W K)))`
+`S` | λa.λb.λc.(a c (b c)) | `S` | `(B (B W) (B B C))`
+`T` | λa.λb.(b a) | `((S (S (K S) (S (K K) S)) (K K)) I)` | `(C (W K))`
+`U` | λa.λb.(b (a a b)) | `(((S (S (K S) (S (K K) S)) (K K)) (S (K S) K) (S I I)) (S I))` | `((C B (W (C K C))) ((B (B W) (B B C)) (W K)))`
+`V**` | λa.λb.λc.λd.λe.(a b e c d) |  |
+`V*` | λa.λb.λc.λd.(a c b d) |  |
+`V` | λa.λb.λc.(c a b) | `((S (K S) K) (S (S (K S) (S (K K) S)) (K K)) ((S (S (K S) (S (K K) S)) (K K)) I))` | `(B C (C (W K)))`
+`W**` | λa.λb.λc.λd.(a b c d d) | `((S (K S) K) ((S (K S) K) (S S (K I))))` | `(B (B W))`
+`W*` | λa.λb.λc.(a b c c) | `((S (K S) K) (S S (K I)))` | `(B W)`
+`W1`, `W¹` | λa.λb.(b a a) | `((S (S (K S) (S (K K) S)) (K K)) (S S (K I)))` | `(C W)`
+`W` | λa.λb.(a b b) | `(S S (K I))` | `W`
+`iota`, `ι` | λa.(a S K) |  |
+`Ê` | λa.λb.λc.λd.λe.λf.λg.(a (b c d) (e f g)) | `(((S (K S) K) (((S (K S) K) (S (K S) K)) (S (K S) K))) ((S (K S) K) (((S (K S) K) (S (K S) K)) (S (K S) K))))` | `((B ((B B) B)) (B ((B B) B)))`
+
 # See also
 
 - https://dallaylaen.github.io/ski-interpreter/quest.html (solutions for some quests are in [quests.clj](src/combinator_playground/quests.clj))

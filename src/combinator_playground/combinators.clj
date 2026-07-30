@@ -1,6 +1,9 @@
 (ns combinator-playground.combinators
   (:require
-   [combinator-playground.utils :refer [replace*]]))
+   [clojure.pprint :as pprint]
+   [clojure.string :as str]
+   [combinator-playground.lambda :refer [combinators->lambda lambda->str]]
+   [combinator-playground.utils :refer [replace* rules->replacements]]))
 
 ;;; Different combinator bases and conversions between them.
 
@@ -234,3 +237,22 @@
    {'C '((B B T) (B B T) (B B T))
     'K '(B (T A) (B B T))
     'W '((B B T) (B B T) (B B T) (B M (B B T)))}))
+
+(defn combinators->md
+  "Formats the map `combinators` as a markdown table, `rules` is a list of optional definitions."
+  [combinators rules]
+  (let [->SKI  (rules->replacements rules '[S K I])
+        ->BCKW (rules->replacements rules '[B C K W])]
+    (->> combinators
+         vals
+         set
+         (map
+          (fn [f]
+            (let [syms    (sort (map first (filter (fn [[_ v]] (= v f)) combinators)))
+                  lambda  (lambda->str (combinators->lambda combinators (first syms)))
+                  as-SKI  (->SKI  (first syms))
+                  as-BCKW (->BCKW (first syms))]
+              (pprint/cl-format nil "~{`~a`~^, ~} | ~a | ~@[`~a`~] | ~@[`~a`~]" syms lambda as-SKI as-BCKW))))
+         sort
+         (str/join "\n")
+         (str "Symbols | Function Abstraction | SKI | BCKW\n---|---|---|---\n"))))

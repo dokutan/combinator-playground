@@ -2,14 +2,14 @@
   (:gen-class)
   #_{:clj-kondo/ignore [:refer-all :unused-namespace :unused-referred-var]}
   (:require
+   [clj-async-profiler.core :as prof]
    [combinator-playground.combinators :refer :all]
-   [combinator-playground.reduce :refer :all]
    [combinator-playground.lambda :refer :all]
    [combinator-playground.quests :refer :all]
+   [combinator-playground.reduce :refer :all]
    [combinator-playground.riddle :refer :all]
-   [combinator-playground.utils  :refer :all]
-   [combinator-playground.search :refer [search]]
-   [clj-async-profiler.core :as prof]))
+   [combinator-playground.search :refer [all-trees search trees]]
+   [combinator-playground.utils  :refer :all]))
 
 (defn -main
   "I don't do a whole lot ... yet."
