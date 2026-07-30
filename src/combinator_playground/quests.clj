@@ -236,16 +236,22 @@
    "9.4 Φ a b c d = a (b d) (c d)"
    (lambda->SKIBC* '[a [b [c [d a (b d) (c d)]]]])
 
-   "10.1 NOT a; true=K, false=KI"
+   "10.1 x I = K; x K = I"
+   (lambda->SKIBC* '[x ((x I) K)])
+
+   "10.2 x I = K; x KI = KI"
+   (lambda->SKIBC* '[x (x (K K) (K I))])
+
+   "11.1 NOT a; true=K, false=KI"
    [(lambda->SKI* '[a a (K I) K])
     '(V (K I) K)]
 
-   "10.2 IF then else cond
+   "11.2 IF then else cond
     → cond then else"
    ['V
     '(B C T)]
 
-   "10.3 OR x y"
+   "11.3 OR x y"
    ["from nested IF:"
     '(V (V K K) (V K (K I)))
     '(V (K K) (V K (K I)))
@@ -253,7 +259,7 @@
     "x→y→x x y"
     (lambda->SKI* '[x [y x x y]])]
 
-   "10.4 AND x y"
+   "11.4 AND x y"
    ["from nested IF:"
     '(V (V K (K I)) (V (K I) (K I)))
     '(V (V K (K I)) (K (K I)))
@@ -261,53 +267,53 @@
     "x→y→x y x"
     (lambda->SKI* '[x [y x y x]])]
 
-   "10.5 NAND x y"
+   "11.5 NAND x y"
    ['(V (V (K I) K) (V K K))
     '(V (V (K I) K) (K K))]
 
-   "10.6 check→then→else→x→(check x) (then x) (else x)"
+   "11.6 check→then→else→x→(check x) (then x) (else x)"
    (lambda->SKI* '[check [then [else [x (check x) (then x) (else x)]]]])
 
-   "11.1 Church numeral 2"
+   "12.1 Church numeral 2"
    (lambda->SKI* '[f [x f (f x)]])
 
-   "11.2 INC n = INC n x y = x (n x y)"
+   "12.2 INC n = INC n x y = x (n x y)"
    (lambda->SKI* '[n [x [y x (n x y)]]])
 
-   "11.3 ADD n m = ADD n m x y = n x (m x y)"
+   "12.3 ADD n m = ADD n m x y = n x (m x y)"
    (lambda->BCKW* '[n [m [x [y n x (m x y)]]]])
 
-   "11.4 ZERO? n = n (x → FALSE) TRUE"
+   "12.4 ZERO? n = n (x → FALSE) TRUE"
    (lambda->BCKW* '[n n (K (K I)) K])
 
-   "11.5 EVEN? n = n NOT TRUE"
+   "12.5 EVEN? n = n NOT TRUE"
    (lambda->BCKW* '[n n (V (K I) K) K])
 
-   "11.6 DEC n; DEC 0 = 0"
+   "12.6 DEC n; DEC 0 = 0"
    (lambda->BCKW* '[n [f [x n [r [i i (r f)]] (K x) I]]])
 
-   "11.7 HALF n"
+   "12.7 HALF n"
    (lambda->BCKW* '[n [f [x n [r [a [b a (r b a)]]] [a [b x]] I f]]])
 
-   "11.8 MULT m n = MULT m n f x = m (n f) x"
+   "12.8 MULT m n = MULT m n f x = m (n f) x"
    (lambda->BCKW* '[m [n [f [x m (n f) x]]]])
 
-   "11.9 EXP m n = m n f x = n m f x ; m^n"
+   "12.9 EXP m n = m n f x = n m f x ; m^n"
    ['T]
 
-   "12.1 MAP f (V a b) = V(f a)(f b) ; (V … …) = pair"
+   "13.1 MAP f (V a b) = V(f a)(f b) ; (V … …) = pair"
    (lambda->SKIBC* '[f [pair (V (f (pair K)) (f (pair (K I))))]])
 
-   "12.2 f g (V a b) → f a (g b)"
+   "13.2 f g (V a b) → f a (g b)"
    (lambda->SKIBC* '[f [g [pair f (pair K) (g (pair (K I)))]]])
 
-   "12.3 f g (V a b) → V (f a b) (g a b)"
+   "13.3 f g (V a b) → V (f a b) (g a b)"
    (lambda->SKIBC* '[f [g [pair V (f (pair K) (pair (K I))) (g (pair K) (pair (K I)))]]])
 
-   "12.4 f d (V a b) → f a b; f d (K I) → d"
+   "13.4 match: f d (V a b) → f a b; f d (K I) → d"
    (lambda->SKIBC* '[f [d [x x [a [b [_ f a b]]] d]]])
 
-   "12.5 triplet [(V a b) K = a; (V a b) (K I) = b]"
+   "13.5 triplet [(V a b) K = a; (V a b) (K I) = b]"
    ["triplet a b c"
     (lambda->SKIBC* '[a [b [c V a (V b c)]]])
     "first"
@@ -317,20 +323,38 @@
     "third"
     (lambda->SKIBC* '[triplet triplet (K I) (K I)])]
 
-   "13.1 lst a b f z = f a (b f z)"
+   "14.1 lst a b f z = f a (b f z)"
    (lambda->SKIBC* '[a [b [f [z f a (b f z)]]]])
 
-   "13.2 len lst = lst (K inc) 0"
+   "14.2 len lst = lst (K inc) 0"
    (lambda->SKIBC* '[l l (K [n [x [y x (n x y)]]]) (K I)])
 
-   "13.3 cat a b"
+   "14.3 cat a b"
    (lambda->SKIBC* '[a [b [f [x a f (b f x)]]]])
 
-   "14.4 Y f = f (Y f); Y = f → (x → f (x x)) (x → f (x x))"
+   "14.4 map fn list"
+   (lambda->SKIBC* '[fn [list list [a [r [g [y g (fn a) (r g y)]]]] (K I)]])
+
+   "15.4 Y f = f (Y f); Y = f → (x → f (x x)) (x → f (x x))"
    (lambda->SKIBC* '[f [x f (x x)] [x f (x x)]])
 
-   "17.1 M x = x"
-   ['I]])
+   "15.8 M"
+   ['(C (B Y V) (C B (T K)))]
+
+   "17.1 empty? list = match (K (K (K I))) K"
+   ['((B C (B (C I) (B (B K)))) (K (K (K I))) K)]
+
+   "17.2 tail list = match (K I) (K I)"
+   ['((B C (B (C I) (B (B K)))) (K I) (K I))]
+
+   "18.1 M x = x"
+   ['I]
+
+   "18.4 C x = x"
+   ['(K (K K))]
+
+   "18.5 S x = x"
+   ['(K (K I))]])
 
 (defn print-quests []
   (pprint/cl-format true "~{~a\n~{ ~a\n~}\n\n~}" (quests)))
