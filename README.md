@@ -21,26 +21,15 @@ The intended usage is from a Clojure REPL. With [Leiningen](https://leiningen.or
 
 For function documentation, check the docstrings, either in the source code or with `(doc fn)`.
 - `reduce*` reduce an expression using the given combinators with intermediate results ([reduce.clj](src/combinator_playground/reduce.clj))
-- `lambda->SKI*`, `lambda->BCKW*` convert lambda to SKI/BCKW calculus ([lambda.clj](src/combinator_playground/lambda.clj))
+- `lambda->SKI*`, `lambda->BCKW*`, `lambda->SKIBC*`, `lambda->SKIBC'*` convert lambda to SKI/BCKW calculus ([lambda.clj](src/combinator_playground/lambda.clj))
 - `SKI->BCKW`, ... convert between combinators ([combinators.clj](src/combinator_playground/combinators.clj))
 - `search` search for expressions ([search.clj](src/combinator_playground/search.clj))
 
-The following graph shows the implemented conversions.
-```mermaid
-graph TD;
-    lambda[λ]-->|lambda->SKI*|SKI;
-    lambda[λ]-->|lambda->BCKW*|BCKW;
-    SKI-->|I->SK|SK;
-    SKI-->|SKI->BCKW|BCKW;
-    SK-->|SKI->BCKW|BCKW;
-    SKI-->|SKI->X|X/iota;
-    SK-->|SKI->X|X/iota;
-    BCKW-->|BCKW->SKI|SKI;
-    MTAB-->|MTAB->BCKW|BCKW;
-    BCKW-->|BCKW->MTAB|MTAB;
-```
+<details>
+<summary>Builtin combinators</summary>
 
-Builtin combinators:
+This table was generated with [combinators->md](src/combinator_playground/combinators.clj), the equivalent SKI/BCKW terms are not guaranteed to be short/efficient.
+
 Symbols | Function Abstraction | SKI | BCKW
 ---|---|---|---
 `A` | λa.λb.b | `(K ((S (S (K S) (S (K K) S)) (K K)) K (S (S (K S) (S (K K) S)) (K K))))` | `(K (C K C))`
@@ -92,6 +81,22 @@ Symbols | Function Abstraction | SKI | BCKW
 `W` | λa.λb.(a b b) | `(S S (K I))` | `W`
 `iota`, `ι` | λa.(a S K) |  |
 `Ê` | λa.λb.λc.λd.λe.λf.λg.(a (b c d) (e f g)) | `(((S (K S) K) (((S (K S) K) (S (K S) K)) (S (K S) K))) ((S (K S) K) (((S (K S) K) (S (K S) K)) (S (K S) K))))` | `((B ((B B) B)) (B ((B B) B)))`
+</details>
+
+The following graph shows some of the directly implemented conversions, more can be derived from the included set of definitions.
+```mermaid
+graph TD;
+    lambda[λ]-->|lambda->SKI*|SKI;
+    lambda[λ]-->|lambda->BCKW*|BCKW;
+    SKI-->|I->SK|SK;
+    SKI-->|SKI->BCKW|BCKW;
+    SK-->|SKI->BCKW|BCKW;
+    SKI-->|SKI->iota|iota;
+    SK-->|SKI->iota|iota;
+    BCKW-->|BCKW->SKI|SKI;
+    MTAB-->|MTAB->BCKW|BCKW;
+    BCKW-->|BCKW->MTAB|MTAB;
+```
 
 # See also
 
