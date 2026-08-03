@@ -238,6 +238,17 @@
     'K '(B (T A) (B B T))
     'W '((B B T) (B B T) (B B T) (B M (B B T)))}))
 
+(defn int->church
+  "Convert a positive integer to a church numeral in the SKI basis."
+  [x]
+  (let [n-0   '(K I)
+        n-1   'I
+        n-inc '(S (S (K S) K))] ; = S B
+    (cond
+      (zero? x)    n-0
+      (= 1   x)    n-1
+      (pos-int? x) (list n-inc (int->church (dec x))))))
+
 (defn combinators->md
   "Formats the map `combinators` as a markdown table, `rules` is a list of optional definitions."
   [combinators rules]

@@ -4,7 +4,7 @@ An interpreter for [Combinatory logic](https://en.wikipedia.org/wiki/Combinatory
 
 ## Usage
 
-The intended usage is from a Clojure REPL. With [Leiningen](https://leiningen.org/) installed, a REPL can be started with `lein repl`. Alternatively use an integration into your favorite editor to evaluate expressions.
+The intended usage is from a Clojure REPL. With [Leiningen](https://leiningen.org/) installed, a REPL can be started with `lein repl`. Alternatively use an integration into your favorite editor to evaluate expressions. A standalone .jar file can be built with `lein uberjar`.
 
 ```clojure
 ;; reduce KIxy (returns a vector of intermediate results)
@@ -24,6 +24,7 @@ For function documentation, check the docstrings, either in the source code or w
 - `lambda->SKI*`, `lambda->BCKW*`, `lambda->SKIBC*`, `lambda->SKIBC'*` convert lambda to SKI/BCKW calculus ([lambda.clj](src/combinator_playground/lambda.clj))
 - `SKI->BCKW`, ... convert between combinators ([combinators.clj](src/combinator_playground/combinators.clj))
 - `search` search for expressions ([search.clj](src/combinator_playground/search.clj))
+- `interpreter` a primitive interpreter with variables ([interpreter.clj](src/combinator_playground/interpreter.clj))
 
 <details>
 <summary>Builtin combinators</summary>

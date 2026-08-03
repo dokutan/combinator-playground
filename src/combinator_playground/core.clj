@@ -9,14 +9,22 @@
    [combinator-playground.reduce :refer :all]
    [combinator-playground.riddle :refer :all]
    [combinator-playground.search :refer [all-trees search trees]]
-   [combinator-playground.utils  :refer :all]))
+   [combinator-playground.utils  :refer :all]
+   [combinator-playground.interpreter :refer [interpreter]]))
 
 (defn -main
   "I don't do a whole lot ... yet."
-  [& _args]
+  [& args]
+  (when-some [command (first args)]
+    (case command
+      "combinators"
+      (println (combinators->md all-combinators all-rules))
 
-  (reduce* SKI '(K x ((S I I) (S I I))))
-  (println)
-  (reduce* BCKW '(W x y))
-  (println)
-  (reduce* SKI (BCKW->SKI '(C))))
+      "quests"
+      (print-quests)
+
+      "interpreter"
+      (if-some [file (second args)]
+        (with-in-str (slurp file)
+          (interpreter))
+        (interpreter)))))
