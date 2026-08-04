@@ -1,0 +1,61 @@
+;; Example implementation of ternary logic in combinator calculus.
+;; See https://en.wikipedia.org/wiki/Three-valued_logic for details.
+
+;; λabc.a
+#def True    B K K
+
+;; λabc.b
+#def Unknown K K
+
+;; λabc.c
+#def False   K (K I)
+
+
+;; λa.a False Unknown True
+#def Not     (C (C (C I False) Unknown) True)
+
+;; λab.a b Unknown False
+#def And     (C (B C (C C Unknown)) False)
+
+;; λab.a True (b True Unknown Unknown) b
+#def Or      (C (B S (C (B B (C I True)) (C (C (C I True) Unknown) Unknown))) I)
+
+;; λab.a (Not b) Unknown b
+#def Xor     (C (B S (C (B C (C B Not)) Unknown)) I)
+
+#def Tostring (C (C (C I "True") "Unknown") "False")
+
+
+"Not True    ="
+B Tostring Not True
+"Not Unknown ="
+B Tostring Not Unknown
+"Not False   ="
+B Tostring Not False
+
+""
+
+"And True    True    ="
+B1 Tostring And True    True
+"And Unknown True    ="
+B1 Tostring And Unknown True
+"And False   True    ="
+B1 Tostring And False   True
+
+""
+
+"Or  True    Unknown ="
+B1 Tostring Or  True    Unknown
+"Or  Unknown Unknown ="
+B1 Tostring Or  Unknown Unknown
+"Or  False   Unknown ="
+B1 Tostring Or  False   Unknown
+
+""
+
+"Xor True    True    ="
+B1 Tostring Xor True    True
+"Xor True    Unknown ="
+B1 Tostring Xor True    Unknown
+"Xor True    False   ="
+B1 Tostring Xor True    False
