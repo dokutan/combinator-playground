@@ -3,6 +3,7 @@
    [clojure.pprint :as pprint]
    [clojure.string :as str]
    [combinator-playground.lambda :refer [combinators->lambda lambda->str]]
+   [combinator-playground.reduce :refer [reduce-last]]
    [combinator-playground.utils :refer [replace* rules->replacements]]))
 
 ;;; Different combinator bases and conversions between them.
@@ -240,14 +241,20 @@
 
 (defn int->church
   "Convert a positive integer to a church numeral in the SKI basis."
-  [x]
+  [n]
   (let [n-0   '(K I)
         n-1   'I
         n-inc '(S (S (K S) K))] ; = S B
     (cond
-      (zero? x)    n-0
-      (= 1   x)    n-1
-      (pos-int? x) (list n-inc (int->church (dec x))))))
+      (zero? n)    n-0
+      (= 1   n)    n-1
+      (pos-int? n) (list n-inc (int->church (dec n))))))
+
+(defn church->int
+  "Convert a church numeral representd using `combinators` to an integer."
+  [combinators n]
+  (let [reduced (reduce-last combinators (list n 'inc 0))]
+    (count (filter (partial = 'inc) (flatten reduced)))))
 
 (defn combinators->md
   "Formats the map `combinators` as a markdown table, `rules` is a list of optional definitions."

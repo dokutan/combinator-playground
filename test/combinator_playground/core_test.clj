@@ -1,7 +1,8 @@
 (ns combinator-playground.core-test
   (:require
    [clojure.test :refer :all]
-   [combinator-playground.combinators :refer [all-combinators all-rules SKI]]
+   [combinator-playground.combinators :refer [all-combinators all-rules
+                                              church->int int->church SKI]]
    [combinator-playground.core :refer :all]
    [combinator-playground.lambda :refer :all]
    [combinator-playground.reduce :refer [reduce* reduce-last]]
@@ -85,6 +86,12 @@
                   (reduce-last all-combinators (concat (list as-BCKW) args)))
                (str combinator " ≠ " as-BCKW)))))
      all-rules)))
+
+(deftest church-int-test
+  (is (= 0  (church->int all-combinators (int->church 0))))
+  (is (= 1  (church->int all-combinators (int->church 1))))
+  (is (= 2  (church->int all-combinators (int->church 2))))
+  (is (= 99 (church->int all-combinators (int->church 99)))))
 
 (deftest complexity-test
   (is (= 1 (complexity 'x)))
