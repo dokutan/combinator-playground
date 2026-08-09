@@ -4,11 +4,13 @@
    [combinator-playground.combinators :refer [all-combinators all-rules
                                               BCKW->MTAB BCKW->SKI I->SK
                                               SKI->BCKW SKI->iota]]
+   [combinator-playground.interpreter :refer [interpreter]]
    [combinator-playground.lambda :refer [lambda->BCKW* lambda->SKI*
                                          lambda->SKIBC*]]
    [combinator-playground.reduce :refer [reduce-last]]
    [combinator-playground.search :refer [search]]
-   [combinator-playground.utils :refer [fixpoint replace* rules->replacements]]))
+   [combinator-playground.utils :refer [fixpoint replace* rules->replacements]]
+   [combinator-playground.writer :refer [bind fmap]]))
 
 ;;; Solutions for https://dallaylaen.github.io/ski-interpreter/quest.html
 
@@ -340,6 +342,25 @@
 
    "15.8 M"
    ['(C (B Y V) (C B (T K)))]
+
+   "16.1 FACTORIAL n"
+   ["(1) too slow"
+    (with-out-str
+      (with-in-str
+        "#def dec   (C (B C (B (B C) (C (B C (B (B B) (C B (B (B (C (W K))) (C (W K)))))) K))) I)
+         #def zero? (C (C (W K) (K (K I))) K)
+         #def *     B
+         ;; recur → n → (zero? n) I (* n (recur (dec n)))
+         #def fact (B (S (C zero? I)) (B (S B) (C B dec)))
+         \"Y\" fact"
+        (interpreter)))
+
+    "(2) only fast enough with inc = S B"
+    (-> '[n [f n [r [a a (r (inc a))]] (K f) I]]
+        vector
+        (bind lambda->SKIBC*)
+        (fmap (partial replace* {'inc '(S B)}))
+        last)]
 
    "17.1 empty? list = match (K (K (K I))) K"
    ['((B C (B (C I) (B (B K)))) (K (K (K I))) K)]

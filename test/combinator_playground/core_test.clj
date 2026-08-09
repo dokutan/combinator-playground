@@ -48,7 +48,7 @@
                all-combinators
                (concat (list replacement) args)))
            (str replacement))))
-   all-rules))
+   (remove #(= 'Y (first %)) all-rules)))
 
 (deftest combinators-arity-test
   (run!
@@ -70,7 +70,7 @@
        (is (= (reduce-last all-combinators (concat (list combinator) args))
               (reduce-last all-combinators (concat (list replacement) args)))
            (str combinator " ≠ " replacement))))
-   all-rules)
+   (remove #(= 'Y (first %)) all-rules))
   ;; combinator = combinator as SKI = combinator as BCKW ?
   (let [->SKI  (rules->replacements all-rules '[S K I])
         ->BCKW (rules->replacements all-rules '[B C K W])]
@@ -85,7 +85,7 @@
            (is (= (reduce-last all-combinators (concat (list combinator) args))
                   (reduce-last all-combinators (concat (list as-BCKW) args)))
                (str combinator " ≠ " as-BCKW)))))
-     all-rules)))
+     (remove #(= 'Y (first %)) all-rules))))
 
 (deftest church-int-test
   (is (= 0  (church->int all-combinators (int->church 0))))

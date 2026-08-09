@@ -83,6 +83,7 @@
      'W¹   W1
      'W*   ^{:arity 3} (fn [x y z]     (list x y z z))
      'W**  ^{:arity 4} (fn [a b c d]   (list a b c d d))
+     'Y    ^{:arity 1} (fn [f]         (list f (list 'Y f)))
      'ι    iota
      'iota iota
      'Φ    PHI
@@ -180,6 +181,7 @@
    ['W1 'W¹]
    ['W* '(B W)]
    ['W** '(B W*)]
+   ['Y '(S L L)]
    ['ι 'iota]
    ['iota 'ι]
    ['Φ '(B₁ S B)]
