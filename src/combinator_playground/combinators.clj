@@ -243,14 +243,15 @@
 
 (defn int->church
   "Convert a positive integer to a church numeral in the SKI basis."
-  [n]
-  (let [n-0   '(K I)
-        n-1   'I
-        n-inc '(S (S (K S) K))] ; = S B
-    (cond
-      (zero? n)    n-0
-      (= 1   n)    n-1
-      (pos-int? n) (list n-inc (int->church (dec n))))))
+  [n & {:keys [zero one inc]
+        :or {zero '(K I)
+             one  'I
+             inc  '(S (S (K S) K))}
+        :as opts}]
+  (cond
+    (zero? n)    zero
+    (= 1   n)    one
+    (pos-int? n) (list inc (int->church (dec n) opts))))
 
 (defn church->int
   "Convert a church numeral representd using `combinators` to an integer."

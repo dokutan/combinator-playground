@@ -3,7 +3,7 @@
    [clojure.pprint :as pprint]
    [combinator-playground.combinators :refer [all-combinators all-rules
                                               BCKW->MTAB BCKW->SKI I->SK
-                                              SKI->BCKW SKI->iota]]
+                                              int->church SKI->BCKW SKI->iota]]
    [combinator-playground.interpreter :refer [interpreter]]
    [combinator-playground.lambda :refer [lambda->BCKW* lambda->SKI*
                                          lambda->SKIBC*]]
@@ -269,11 +269,14 @@
     "x→y→x y x"
     (lambda->SKI* '[x [y x y x]])]
 
-   "11.5 NAND x y"
+   "11.5 IMPLICATION x y"
+   (lambda->SKIBC* '[x [y x y K]])
+
+   "11.6 NAND x y"
    ['(V (V (K I) K) (V K K))
     '(V (V (K I) K) (K K))]
 
-   "11.6 check→then→else→x→(check x) (then x) (else x)"
+   "11.7 check→then→else→x→(check x) (then x) (else x)"
    (lambda->SKI* '[check [then [else [x (check x) (then x) (else x)]]]])
 
    "12.1 Church numeral 2"
@@ -368,13 +371,24 @@
    "17.2 tail list = match (K I) (K I)"
    ['((B C (B (C I) (B (B K)))) (K I) (K I))]
 
-   "18.1 M x = x"
+   "18.1 Hello World"
+   [(loop [res '()
+           str (reverse "HELLO WORLD")]
+      (if-not (empty? str)
+        (recur
+         (list 'lst
+               (-> str first int (int->church :inc '(S B)))
+               (if (empty? res) 'nil res))
+         (rest str))
+        res))]
+
+   "19.1 M x = x"
    ['I]
 
-   "18.4 C x = x"
+   "19.4 C x = x"
    ['(K (K K))]
 
-   "18.5 S x = x"
+   "19.5 S x = x"
    ['(K (K I))]])
 
 (defn print-quests []

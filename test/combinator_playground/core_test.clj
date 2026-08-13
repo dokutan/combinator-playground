@@ -91,7 +91,8 @@
   (is (= 0  (church->int all-combinators (int->church 0))))
   (is (= 1  (church->int all-combinators (int->church 1))))
   (is (= 2  (church->int all-combinators (int->church 2))))
-  (is (= 99 (church->int all-combinators (int->church 99)))))
+  (is (= 99 (church->int all-combinators (int->church 99))))
+  (is (= 99 (church->int all-combinators (int->church 99 :inc '(S B))))))
 
 (deftest complexity-test
   (is (= 1 (complexity 'x)))
