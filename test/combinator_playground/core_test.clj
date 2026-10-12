@@ -6,6 +6,7 @@
    [combinator-playground.core :refer :all]
    [combinator-playground.lambda :refer :all]
    [combinator-playground.reduce :refer [reduce* reduce-last]]
+   [combinator-playground.tree :refer [SKI->tree tree-node tree-rules]]
    [combinator-playground.utils :refer :all]))
 
 (deftest SKI-test
@@ -100,3 +101,20 @@
   (is (= 2 (complexity '(x x))))
   (is (= 3 (complexity '(x x x))))
   (is (= 4 (complexity '(x (x x))))))
+
+(deftest SKI->tree-test
+  (is (= 'x (reduce-last tree-node (SKI->tree '(I x)))))
+  (is (= 'x (reduce-last tree-node (SKI->tree '(K x y)))))
+  (is (= '(x z (y z)) (reduce-last tree-node (SKI->tree '(S x y z))))))
+
+(deftest tree-rules-test
+  ;; combinator = combinator as tree calculus
+  (let [->tree (rules->replacements (into all-rules tree-rules) '[△])]
+    (run!
+     (fn [[combinator _]]
+       (let [args (range (arity (all-combinators combinator)))]
+         (when-let [as-tree (->tree combinator)]
+           (is (= (reduce-last all-combinators (concat (list combinator) args))
+                  (reduce-last tree-node (concat (list as-tree) args)))
+               (str combinator " ≠ " as-tree)))))
+     (remove #(= 'Y (first %)) all-rules))))

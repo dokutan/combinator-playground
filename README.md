@@ -15,6 +15,13 @@ The intended usage is from a Clojure REPL. With [Leiningen](https://leiningen.or
 
 ;; perform a brute force search for all BCKW terms of size 3 that are equivalent to I
 (search BCKW 3 ['x] (partial = 'x) 10)
+
+;; convert SII x = M x to tree calculus and reduce using the writer monad to keep a history of results
+(-> '((S I I) x)
+    vector
+    (fmap SKI->tree)
+    (bind (partial reduce* tree-node))
+    last)
 ```
 
 ## Features
@@ -25,6 +32,7 @@ For function documentation, check the docstrings, either in the source code or w
 - `SKI->BCKW`, ... convert between combinators ([combinators.clj](src/combinator_playground/combinators.clj))
 - `search` search for expressions ([search.clj](src/combinator_playground/search.clj))
 - `interpreter` a primitive interpreter with variables ([interpreter.clj](src/combinator_playground/interpreter.clj))
+- basic support for tree/triage calculus ([tree.clj](src/combinator_playground/tree.clj))
 
 <details>
 <summary>Builtin combinators</summary>
@@ -97,6 +105,7 @@ graph TD;
     BCKW-->|BCKW->SKI|SKI;
     MTAB-->|MTAB->BCKW|BCKW;
     BCKW-->|BCKW->MTAB|MTAB;
+    SKI-->|SKI->tree|tree[tree calculus];
 ```
 
 # See also
@@ -104,3 +113,4 @@ graph TD;
 - https://dallaylaen.github.io/ski-interpreter/quest.html (solutions for some quests are in [quests.clj](src/combinator_playground/quests.clj))
 - https://blog.happyfellow.dev/a-riddle/ ([riddle.txt](resources/riddle.txt) and a solution in [riddle.clj](src/combinator_playground/riddle.clj))
 - https://combinatorylogic.com/table.html
+- https://treecalcul.us/

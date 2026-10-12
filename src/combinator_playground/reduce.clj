@@ -36,6 +36,7 @@
   [combinators expr & [limit]]
   (loop [expr' nil expr expr steps []]
     (if (or (= expr' expr)
+            (= expr (last (butlast steps)))
             (and limit (= limit (count steps))))
       steps
       (let [expr' (reduce-1 combinators expr)]

@@ -9,6 +9,7 @@
    [combinator-playground.reduce :refer :all]
    [combinator-playground.riddle :refer :all]
    [combinator-playground.search :refer [all-trees search trees]]
+   [combinator-playground.tree   :refer :all]
    [combinator-playground.utils  :refer :all]
    [combinator-playground.writer :refer [bind fmap]]
    [combinator-playground.interpreter :refer [interpreter]]))
