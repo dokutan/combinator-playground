@@ -41,7 +41,7 @@ This table was generated with [combinators->md](src/combinator_playground/combin
 
 Symbols | Function Abstraction | SKI | BCKW
 ---|---|---|---
-`A` | λa.λb.b | `(K ((S (S (K S) (S (K K) S)) (K K)) K (S (S (K S) (S (K K) S)) (K K))))` | `(K (C K C))`
+`A` | λa.λb.b | `(K I)` | `(K (W K))`
 `B'`, `D` | λa.λb.λc.λd.(a b (c d)) | `((S (K S) K) (S (K S) K))` | `(B B)`
 `B1`, `B₁` | λa.λb.λc.λd.(a (b c d)) | `(((S (K S) K) (S (K S) K)) (S (K S) K))` | `((B B) B)`
 `B2`, `B₂` | λa.λb.λc.λd.λe.(a (b c d e)) | `(((S (K S) K) (S (K S) K)) (((S (K S) K) (S (K S) K)) (S (K S) K)))` | `((B B) ((B B) B))`
@@ -56,16 +56,16 @@ Symbols | Function Abstraction | SKI | BCKW
 `E` | λa.λb.λc.λd.λe.(a b (c d e)) | `((S (K S) K) (((S (K S) K) (S (K S) K)) (S (K S) K)))` | `(B ((B B) B))`
 `F**` | λa.λb.λc.λd.λe.(a b e d c) | `((S (K S) K) ((S (K S) K) ((S (K S) K) (S (S (K S) (S (K K) S)) (K K))) (((S (K S) K) (S (S (K S) (S (K K) S)) (K K))) ((S (K S) K) (S (S (K S) (S (K K) S)) (K K))))))` | `(B (B (B C) ((B C) (B C))))`
 `F*` | λa.λb.λc.λd.(a d c b) | `((S (K S) K) ((S (K S) K) (S (S (K S) (S (K K) S)) (K K))) (((S (K S) K) (S (S (K S) (S (K K) S)) (K K))) ((S (K S) K) (S (S (K S) (S (K K) S)) (K K)))))` | `(B (B C) ((B C) (B C)))`
-`F` | λa.λb.λc.(c b a) | `(((S (K S) K) (((S (K S) K) (S (K S) K)) (S (K S) K))) ((S (S (K S) (S (K K) S)) (K K)) I) ((S (S (K S) (S (K K) S)) (K K)) I) ((S (K S) K) (((S (K S) K) (S (K S) K)) (S (K S) K))) ((S (S (K S) (S (K K) S)) (K K)) I))` | `((B ((B B) B)) (C (W K)) (C (W K)) (B ((B B) B)) (C (W K)))`
+`F` | λa.λb.λc.(c b a) | `((S (S (K S) (S (K K) S)) (K K)) ((S (K S) K) (S (S (K S) (S (K K) S)) (K K)) ((S (S (K S) (S (K K) S)) (K K)) I)))` | `(C (B C (C (W K))))`
 `G` | λa.λb.λc.λd.(a d (b c)) | `(((S (K S) K) (S (K S) K)) (S (S (K S) (S (K K) S)) (K K)))` | `((B B) C)`
 `H` | λa.λb.λc.(a b c b) | `((S (K S) K) (S S (K I)) ((S (K S) K) (S (S (K S) (S (K K) S)) (K K))))` | `(B W (B C))`
 `I*` | λa.λb.(a b) | `(S (S K))` | `((B (B W) (B B C)) ((B (B W) (B B C)) K))`
 `I` | λa.a | `I` | `(W K)`
-`J` | λa.λb.λc.λd.(a b (a d c)) |  |
+`J` | λa.λb.λc.λd.(a b (a d c)) | `((S (K S) K) ((S (K S) K) (S (S (K S) (S (K K) S)) (K K))) ((S S (K I)) ((S (K S) K) (S (S (K S) (S (K K) S)) (K K)) ((S (K S) K) ((S (K S) K) (S (K S) K) (S (K S) K))))))` | `(B (B C) (W (B C (B (B B B)))))`
 `K` | λa.λb.a | `K` | `K`
-`L` | λa.λb.(a (b b)) | `((S (S (K S) (S (K K) S)) (K K)) (S (K S) K) (S I I))` | `(C B (W (C K C)))`
-`M2`, `M₂` | λa.λb.(a b (a b)) |  |
-`M` | λa.(a a) | `(S I I)` | `(W (C K C))`
+`L` | λa.λb.(a (b b)) | `((S (K S) K) (S S (K I)) (S (K S) K))` | `(B W B)`
+`M2`, `M₂` | λa.λb.(a b (a b)) | `(S S I)` | `((B (B W) (B B C)) (B (B W) (B B C)) (W K))`
+`M` | λa.(a a) | `(S I I)` | `(W (W K))`
 `N` | λa.λb.λc.λd.(a b (c b d)) |  |
 `O` | λa.λb.(b (a b)) | `(S I)` | `((B (B W) (B B C)) (W K))`
 `PHI`, `S'`, `Φ` | λa.λb.λc.λd.(a (b d) (c d)) | `((((S (K S) K) (S (K S) K)) (S (K S) K)) S (S (K S) K))` | `(((B B) B) (B (B W) (B B C)) B)`
@@ -77,17 +77,18 @@ Symbols | Function Abstraction | SKI | BCKW
 `Q` | λa.λb.λc.(b (a c)) | `((S (S (K S) (S (K K) S)) (K K)) (S (K S) K))` | `(C B)`
 `R**` | λa.λb.λc.λd.λe.(a b d e c) | `((S (K S) K) (((S (K S) K) (S (S (K S) (S (K K) S)) (K K))) ((S (K S) K) (S (S (K S) (S (K K) S)) (K K)))))` | `(B ((B C) (B C)))`
 `R*` | λa.λb.λc.λd.(a c d b) | `(((S (K S) K) (S (S (K S) (S (K K) S)) (K K))) ((S (K S) K) (S (S (K S) (S (K K) S)) (K K))))` | `((B C) (B C))`
-`R` | λa.λb.λc.(b c a) | `(((S (K S) K) (S (K S) K)) ((S (S (K S) (S (K K) S)) (K K)) I))` | `((B B) (C (W K)))`
+`R` | λa.λb.λc.(b c a) | `((S (S (K S) (S (K K) S)) (K K)) (S (S (K S) (S (K K) S)) (K K)))` | `(C C)`
 `S` | λa.λb.λc.(a c (b c)) | `S` | `(B (B W) (B B C))`
 `T` | λa.λb.(b a) | `((S (S (K S) (S (K K) S)) (K K)) I)` | `(C (W K))`
-`U` | λa.λb.(b (a a b)) | `(((S (S (K S) (S (K K) S)) (K K)) (S (K S) K) (S I I)) (S I))` | `((C B (W (C K C))) ((B (B W) (B B C)) (W K)))`
-`V**` | λa.λb.λc.λd.λe.(a b e c d) |  |
-`V*` | λa.λb.λc.λd.(a c b d) |  |
+`U` | λa.λb.(b (a a b)) | `(((S (K S) K) (S S (K I)) (S (K S) K)) (S I))` | `((B W B) ((B (B W) (B B C)) (W K)))`
+`V**` | λa.λb.λc.λd.λe.(a b e c d) | `((S (K S) K) ((S (K S) K) ((S (K S) K) (S (S (K S) (S (K K) S)) (K K))) (S (S (K S) (S (K K) S)) (K K))))` | `(B (B (B C) C))`
+`V*` | λa.λb.λc.λd.(a d b c) | `((S (K S) K) ((S (K S) K) (S (S (K S) (S (K K) S)) (K K))) (S (S (K S) (S (K K) S)) (K K)))` | `(B (B C) C)`
 `V` | λa.λb.λc.(c a b) | `((S (K S) K) (S (S (K S) (S (K K) S)) (K K)) ((S (S (K S) (S (K K) S)) (K K)) I))` | `(B C (C (W K)))`
 `W**` | λa.λb.λc.λd.(a b c d d) | `((S (K S) K) ((S (K S) K) (S S (K I))))` | `(B (B W))`
 `W*` | λa.λb.λc.(a b c c) | `((S (K S) K) (S S (K I)))` | `(B W)`
 `W1`, `W¹` | λa.λb.(b a a) | `((S (S (K S) (S (K K) S)) (K K)) (S S (K I)))` | `(C W)`
 `W` | λa.λb.(a b b) | `(S S (K I))` | `W`
+`Y` | λa.(a (Y a)) | `(S ((S (K S) K) (S S (K I)) (S (K S) K)) ((S (K S) K) (S S (K I)) (S (K S) K)))` | `((B (B W) (B B C)) (B W B) (B W B))`
 `iota`, `ι` | λa.(a S K) |  |
 `Ê` | λa.λb.λc.λd.λe.λf.λg.(a (b c d) (e f g)) | `(((S (K S) K) (((S (K S) K) (S (K S) K)) (S (K S) K))) ((S (K S) K) (((S (K S) K) (S (K S) K)) (S (K S) K))))` | `((B ((B B) B)) (B ((B B) B)))`
 </details>

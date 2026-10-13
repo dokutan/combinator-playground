@@ -171,7 +171,9 @@
     '(B triple (B B (V K)))]
 
    "8.1 J a b c d = a b (a d c)"
-   (lambda->SKI* '[a [b [c [d a b (a d c)]]]])
+   [(last (lambda->SKI* '[a [b [c [d a b (a d c)]]]]))
+    "or"
+    (last (lambda->SKIBC* '[a [b [c [d a b (a d c)]]]]))]
 
    "8.2 T x y = y x [IJ]"
    '[(J I I)]
