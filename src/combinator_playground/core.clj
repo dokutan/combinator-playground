@@ -29,4 +29,10 @@
       (if-some [file (second args)]
         (with-in-str (slurp file)
           (interpreter))
-        (interpreter)))))
+        (interpreter))
+
+      (do
+        (println "Unknown command, available:")
+        (println " combinators")
+        (println " quests")
+        (println " interpreter")))))

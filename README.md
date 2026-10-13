@@ -24,6 +24,12 @@ The intended usage is from a Clojure REPL. With [Leiningen](https://leiningen.or
     last)
 ```
 
+A few features are available by passing a command to the main class, e.g. `lein run <command>` or `java -jar combinator-playground.jar <command>`:
+- **combinators** prints the table of builtin combinators
+- **quests** prints the quest solutions
+- **interpreter** start an interactive interpreter, `rlwrap` is recommended
+- **interpreter \<file\>** runs file in the interpreter
+
 ## Features
 
 For function documentation, check the docstrings, either in the source code or with `(doc fn)`.
