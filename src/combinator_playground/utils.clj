@@ -19,6 +19,18 @@
     (unwrap (first x))
     x))
 
+(defn normalize
+  "Removes useless parentheses from `x`."
+  [x]
+  (if-not (seq? x)
+    x
+    (let [x (map normalize x)
+          x (map unwrap    x)]
+      (loop [x x]
+        (if (seq? (first x))
+          (recur (concat (first x) (rest x)))
+          (unwrap x))))))
+
 (defn fixpoint [f x]
   (reductions #(if (= %1 %2) (reduced %1) %2) (iterate f x)))
 

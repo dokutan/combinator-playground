@@ -1,6 +1,6 @@
 (ns combinator-playground.tree 
   (:require
-    [combinator-playground.utils :refer [replace*]]))
+    [combinator-playground.utils :refer [normalize replace*]]))
 
 ;;; Tree calculus and triage calculus
 
@@ -35,7 +35,7 @@
             (list z (second x) (nth x 2))
 
             :else
-            (list 'node x y z)))]
+            (normalize (list '△ x y z))))]
     {'node node
      '△   node}))
 
@@ -80,7 +80,7 @@
             (list y (second z) (nth z 2))
 
             :else
-            (list 'node x y z)))]
+            (normalize (list '△ x y z))))]
     {'node node
      '△   node}))
 

@@ -78,10 +78,14 @@
                parsed   (read-string (str "(" b ")"))
                resolved (last (fixpoint (partial replace* variables) parsed))
                reduced  (reduce-last combinators resolved limit)]
-           (recur
-            combinators
-            (into variables {(symbol a) reduced})
-            limit))
+           (if (#{"true" "false" "nil"} a) ; conflicts with the clojure values
+             (do
+               (println "invalid variable name:" a)
+               (recur combinators variables limit))
+             (recur
+              combinators
+              (into variables {(symbol a) reduced})
+              limit)))
 
          ;; comment ?
          (or (empty? line)
