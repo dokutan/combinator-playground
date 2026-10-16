@@ -52,6 +52,7 @@
      'H    ^{:arity 3} (fn [a b c]     (list a b c b))
      'I    ^{:arity 1} (fn [x]         x)
      'I*   ^{:arity 2} (fn [x y]       (list x y))
+     'I**  ^{:arity 3} (fn [x y z]     (list x y z))
      'J    ^{:arity 4} (fn [a b c d]   (list a b (list a d c)))
      'K    ^{:arity 2} (fn [x _]       x)
      'L    ^{:arity 2} (fn [x y]       (list x (list y y)))
@@ -130,8 +131,9 @@
    ['B1 '(D B)] ['B₁ 'B1] ['B1 'B₁]
    ['B2 '(D B₁)] ['B₂ 'B2] ['B2 'B₂]
    ['B3 '(B D B)] ['B₃ 'B3] ['B3 'B₃]
-   ['B' 'D]
-   ['C* '(B C)]
+   ['B' 'D] ['B '(C Q)]
+   ['C '(G G I I)]
+   ['C* '(B C)] ['C* '(G R)]
    ['C** '(B C*)]
    ['D '(B B)] ['D 'B']
    ['D1 '(B D)] ['D₁ 'D1] ['D1 'D₁]
@@ -143,23 +145,24 @@
    ['F** '(B F*)]
    ['G '(D C)]
    ['H '(B W (B C))]
-   ['I* '(S (S K))]
+   ['I* '(S (S K))] ['I* '(B I)]
+   ['I** '(B C C)]
    ['J '(B (B C) (W (B C (B (B B B)))))]
    ['K '(C A)]
    ['L '(C B M)] ['L '(B W B)]
    ['M '(S I I)] ['M '(L I)] ['M '(W I)] ['M '(PHI I I I)]
    ['M2 '(B M)] ['M2 '(W S)] ['M2 '(S S I)] ['M₂ 'M2] ['M2 'M₂]
    ['O '(S I)]
-   ['Q '(C B)]
+   ['Q '(C B)] ['Q '(C* Q₃)]
    ['Q1 '(B C B)] ['Q1 'Q₁] ['Q₁ 'Q1]
    ['Q2 '(C Q₁)] ['Q2 'Q₂] ['Q₂ 'Q2]
-   ['Q3 '(B T)] ['Q3 'Q₃] ['Q₃ 'Q3]
+   ['Q3 '(B T)] ['Q3 'Q₃] ['Q₃ 'Q3] ['Q₃ '(G I)]
    ['Q4 '(F* B)] ['Q4 'Q₄] ['Q₄ 'Q4]
    ['R '(D T)] ['R '(C C)]
    ['R* '(C* C*)]
    ['R** '(B R*)]
    ['S '(PHI I)]
-   ['T '(C I)]
+   ['T '(C I)] ['T '(Q3 I)]
    ['U '(L O)]
    ['V '(B C T)]
    ['V* '(C* F*)] ['V* '(B (B C) C)]

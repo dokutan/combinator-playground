@@ -1,0 +1,46 @@
+;; Examples from https://github.com/barry-jay-personal/tree-calculus/blob/master/tree_book.pdf
+
+#tree
+
+;; d x = △ (△ x), simplifies definitions
+#def d (->SKI [x △ (△ x)])
+
+;; True = K
+#def K    (△ △)
+#def True K
+
+#def I (△ K K)
+
+;; False = K I = A
+#def A     (K I)
+#def False A
+
+#def And (d (K A))
+#def Or  (d (K K)) I
+#def Not (d (K K)) (And I)
+
+And
+And True True  "True" "False"
+And True False "True" "False"
+
+Not
+Not True  "True" "False"
+Not False "True" "False"
+
+#def Pair   △
+#def First  (->SKI [x △ x △ K])
+#def Second (->SKI [x △ x △ A])
+
+Pair   a b
+First  (Pair a b)
+Second (Pair a b)
+
+;; Examples from https://treecalcul.us
+
+#triage
+
+#def Triage (->SKI [a [b [c △ (△ a b) c]]])
+
+Triage "leaf" (K "stem") (K (K "fork")) (△)
+Triage "leaf" (K "stem") (K (K "fork")) (△ △)
+Triage "leaf" (K "stem") (K (K "fork")) (△ △ △)

@@ -33,22 +33,28 @@
    "1.4 f→f x"
    (lambda->SKI* '[f f x])
 
-   "1.5 a→b→c→d→d"
+   "1.5 f→f x y"
+   (lambda->SKI* '[f f x y])
+
+   "1.6 f→f a1 a2 a3 a4 a5"
+   (lambda->SKI* '[f f a1 a2 a3 a4 a5])
+
+   "1.7 a→b→c→d→d"
    (lambda->SKI* '[a [b [c [d d]]]])
 
-   "1.6 y→f y x"
+   "1.8 y→f y x"
    (lambda->SKI* '[y f y x])
 
-   "1.7 M x = x x"
+   "1.9 M x = x x"
    (lambda->SKI* '[x x x])
 
-   "1.8 M_3 x = x x x"
+   "1.10 M_3 x = x x x"
    (lambda->SKI* '[x x x x])
 
-   "1.9 O x y = y (x y)"
+   "1.11 O x y = y (x y)"
    (lambda->SKI* '[x [y y (x y)]])
 
-   "1.10 I => SK"
+   "1.12 I => SK"
    [(I->SK 'I)]
 
    "2.1 g∘f; B f g x = f(g x)"
@@ -163,39 +169,48 @@
    "6.7 R₄ a b c d = b c d a"
    (search (select-keys all-combinators '[B C I R T V]) 4 '[a b c d] (partial = '(b c d a)) 20)
 
-   "7.1 I [BKT]"
-   [(reduce-last all-combinators ((rules->replacements all-rules '[B K T]) 'I))]
+   "6.8 I** a b c = a b c"
+   ['(B C C)]
 
-   "7.3 M x = x x; given triple x = x x x, B C I K T V"
-   ['(search (into (select-keys all-combinators '[B C I K T V]) {'triple (fn [x] (list x x x))}) 6 '[x] (partial = '(x x)) 200)
-    '(B triple (B B (V K)))]
+   "6.9 linear basis → To Mock a Mockingbird chapter 20"
+   ["P = G"
+    "Q₃ = G I"
+    "C = G G I I"
+    "R = C C"
+    "Q = G R Q₃"
+    "B = C Q"
+    "T = G I I"
+    (let [combinators-GI (rules->replacements all-rules '[G I])]
+      (str
+       "B = " (list (replace* {'G 'P} (combinators-GI 'B))) "\n "
+       "T = " (list (replace* {'G 'P} (combinators-GI 'T)))))]
 
-   "8.1 J a b c d = a b (a d c)"
+   "7.1 J a b c d = a b (a d c)"
    [(last (lambda->SKI* '[a [b [c [d a b (a d c)]]]]))
     "or"
     (last (lambda->SKIBC* '[a [b [c [d a b (a d c)]]]]))]
 
-   "8.2 T x y = y x [IJ]"
+   "7.2 T x y = y x [IJ]"
    '[(J I I)]
 
-   "8.3 Q₁ x y z = x (z y) [IJ]"
+   "7.3 Q₁ x y z = x (z y) [IJ]"
    '[(J I)]
 
-   "8.4 B x y z = x (y z) [IJ]"
+   "7.4 B x y z = x (y z) [IJ]"
    ['(search (select-keys all-combinators '[J I T Q₁]) 7 '[x y z] (partial = '(x (y z))) 100)
     "→"
     '(J T (Q₁ T) (J (J T)))
     "→"
     (replace* {'T '(J I I) 'Q₁ '(J I)} '(J T (Q₁ T) (J (J T))))]
 
-   "8.5 C x y z = x z y [IJ]"
+   "7.5 C x y z = x z y [IJ]"
    ['(search (select-keys all-combinators '[J I T Q₁]) 6 '[x y z] (partial = '(x z y)) 100)
     "→"
     '(J T (J T) (J T))
     "→"
     (replace* {'T '(J I I)} '(J T (J T) (J T)))]
 
-   "8.6 W x y = x y y"
+   "7.6 W x y = x y y"
    ["Taken from Rosser 1935: works but is not efficient enough"
     (reduce-last
      all-combinators
@@ -225,37 +240,40 @@
        'B  '(J (J I I) ((J I) (J I I)) (J (J (J I I))))}
       '(C (J (Q₁ (T T))) (B J T))))]
 
-   "8.7 I = AA; K = JAA"
+   "7.7 I = AA; K = JAA"
    (search (select-keys all-combinators '[J A]) 3 '[x y] (partial = 'x) 5)
 
-   "9.1 M₂ x y = (x y) (x y)"
+   "8.1 M₂ x y = (x y) (x y)"
    (lambda->SKI* '[x [y x y (x y)]])
 
-   "9.2 f x y = (x x) (y y)"
+   "8.2 f x y = (x x) (y y)"
    (lambda->SKI* '[x [y x x (y y)]])
 
-   "9.3 f x y = x y x"
+   "8.3 f x y = x y x"
    (lambda->SKI* '[x [y x y x]])
 
-   "9.4 Φ a b c d = a (b d) (c d)"
+   "8.4 Φ a b c d = a (b d) (c d)"
    (lambda->SKIBC* '[a [b [c [d a (b d) (c d)]]]])
 
-   "10.1 x I = K; x K = I"
+   "9.1 x I = K; x K = I"
    (lambda->SKIBC* '[x ((x I) K)])
 
-   "10.2 x I = K; x KI = KI"
+   "9.2 x I = K; x KI = KI"
    (lambda->SKIBC* '[x (x (K K) (K I))])
 
-   "11.1 NOT a; true=K, false=KI"
+   "9.6 x K = K; x KI = KI; x I = K"
+   (lambda->SKIBC* '[x x (x K K) (K I)])
+
+   "10.1 NOT a; true=K, false=KI"
    [(lambda->SKI* '[a a (K I) K])
     '(V (K I) K)]
 
-   "11.2 IF then else cond
+   "10.2 IF then else cond
     → cond then else"
    ['V
     '(B C T)]
 
-   "11.3 OR x y"
+   "10.3 OR x y"
    ["from nested IF:"
     '(V (V K K) (V K (K I)))
     '(V (K K) (V K (K I)))
@@ -263,7 +281,7 @@
     "x→y→x x y"
     (lambda->SKI* '[x [y x x y]])]
 
-   "11.4 AND x y"
+   "10.4 AND x y"
    ["from nested IF:"
     '(V (V K (K I)) (V (K I) (K I)))
     '(V (V K (K I)) (K (K I)))
@@ -271,56 +289,56 @@
     "x→y→x y x"
     (lambda->SKI* '[x [y x y x]])]
 
-   "11.5 IMPLICATION x y"
+   "10.5 IMPLICATION x y"
    (lambda->SKIBC* '[x [y x y K]])
 
-   "11.6 NAND x y"
+   "10.6 NAND x y"
    ['(V (V (K I) K) (V K K))
     '(V (V (K I) K) (K K))]
 
-   "11.7 check→then→else→x→(check x) (then x) (else x)"
+   "10.7 check→then→else→x→(check x) (then x) (else x)"
    (lambda->SKI* '[check [then [else [x (check x) (then x) (else x)]]]])
 
-   "12.1 Church numeral 2"
+   "11.1 Church numeral 2"
    (lambda->SKI* '[f [x f (f x)]])
 
-   "12.2 INC n = INC n x y = x (n x y)"
+   "11.2 INC n = INC n x y = x (n x y)"
    (lambda->SKI* '[n [x [y x (n x y)]]])
 
-   "12.3 ADD n m = ADD n m x y = n x (m x y)"
+   "11.3 ADD n m = ADD n m x y = n x (m x y)"
    (lambda->BCKW* '[n [m [x [y n x (m x y)]]]])
 
-   "12.4 ZERO? n = n (x → FALSE) TRUE"
+   "11.4 ZERO? n = n (x → FALSE) TRUE"
    (lambda->BCKW* '[n n (K (K I)) K])
 
-   "12.5 EVEN? n = n NOT TRUE"
+   "11.5 EVEN? n = n NOT TRUE"
    (lambda->BCKW* '[n n (V (K I) K) K])
 
-   "12.6 DEC n; DEC 0 = 0"
+   "11.6 DEC n; DEC 0 = 0"
    (lambda->BCKW* '[n [f [x n [r [i i (r f)]] (K x) I]]])
 
-   "12.7 HALF n"
+   "11.7 HALF n"
    (lambda->BCKW* '[n [f [x n [r [a [b a (r b a)]]] [a [b x]] I f]]])
 
-   "12.8 MULT m n = MULT m n f x = m (n f) x"
+   "11.8 MULT m n = MULT m n f x = m (n f) x"
    (lambda->BCKW* '[m [n [f [x m (n f) x]]]])
 
-   "12.9 EXP m n = m n f x = n m f x ; m^n"
+   "11.9 EXP m n = m n f x = n m f x ; m^n"
    ['T]
 
-   "13.1 MAP f (V a b) = V(f a)(f b) ; (V … …) = pair"
+   "12.1 MAP f (V a b) = V(f a)(f b) ; (V … …) = pair"
    (lambda->SKIBC* '[f [pair (V (f (pair K)) (f (pair (K I))))]])
 
-   "13.2 f g (V a b) → f a (g b)"
+   "12.2 f g (V a b) → f a (g b)"
    (lambda->SKIBC* '[f [g [pair f (pair K) (g (pair (K I)))]]])
 
-   "13.3 f g (V a b) → V (f a b) (g a b)"
+   "12.3 f g (V a b) → V (f a b) (g a b)"
    (lambda->SKIBC* '[f [g [pair V (f (pair K) (pair (K I))) (g (pair K) (pair (K I)))]]])
 
-   "13.4 match: f d (V a b) → f a b; f d (K I) → d"
+   "12.4 match: f d (V a b) → f a b; f d (K I) → d"
    (lambda->SKIBC* '[f [d [x x [a [b [_ f a b]]] d]]])
 
-   "13.5 triplet [(V a b) K = a; (V a b) (K I) = b]"
+   "12.5 triplet [(V a b) K = a; (V a b) (K I) = b]"
    ["triplet a b c"
     (lambda->SKIBC* '[a [b [c V a (V b c)]]])
     "first"
@@ -330,23 +348,31 @@
     "third"
     (lambda->SKIBC* '[triplet triplet (K I) (K I)])]
 
-   "14.1 lst a b f z = f a (b f z)"
+   "13.1 lst a b f z = f a (b f z)"
    (lambda->SKIBC* '[a [b [f [z f a (b f z)]]]])
 
-   "14.2 len lst = lst (K inc) 0"
+   "13.2 len lst = lst (K inc) 0"
    (lambda->SKIBC* '[l l (K [n [x [y x (n x y)]]]) (K I)])
 
-   "14.3 cat a b"
+   "13.3 cat a b"
    (lambda->SKIBC* '[a [b [f [x a f (b f x)]]]])
 
-   "14.4 map fn list"
+   "13.4 map fn list"
    (lambda->SKIBC* '[fn [list list [a [r [g [y g (fn a) (r g y)]]]] (K I)]])
 
-   "15.4 Y f = f (Y f); Y = f → (x → f (x x)) (x → f (x x))"
+   "13.4 Y f = f (Y f); Y = f → (x → f (x x)) (x → f (x x))"
    (lambda->SKIBC* '[f [x f (x x)] [x f (x x)]])
 
-   "15.8 M"
+   "14.8 M"
    ['(C (B Y V) (C B (T K)))]
+
+   "15.1 I [BKT]"
+   [(reduce-last all-combinators ((rules->replacements all-rules '[B K T]) 'I))]
+
+   "15.3 M x = x x; given triple x = x x x, B C I K T V"
+   ['(search (into (select-keys all-combinators '[B C I K T V]) {'triple (fn [x] (list x x x))}) 6 '[x] (partial = '(x x)) 200)
+    '(B triple (B B (V K)))
+    (last (lambda->BCKW* '[triple (B triple (B B (V K)))]))]
 
    "16.1 FACTORIAL n"
    ["(1) too slow"
