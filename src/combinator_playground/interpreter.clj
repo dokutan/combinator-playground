@@ -76,15 +76,14 @@
          (re-matches #"^#def +[^ ]+ +[^ ].*" line)
          (let [[_ a b]  (str/split line #" +" 3)
                parsed   (read-string (str "(" b ")"))
-               resolved (last (fixpoint (partial replace* variables) parsed))
-               reduced  (reduce-last combinators resolved limit)]
+               resolved (last (fixpoint (partial replace* variables) parsed))]
            (if (#{"true" "false" "nil"} a) ; conflicts with the clojure values
              (do
                (println "invalid variable name:" a)
                (recur combinators variables limit))
              (recur
               combinators
-              (into variables {(symbol a) reduced})
+              (into variables {(symbol a) resolved})
               limit)))
 
          ;; comment ?
@@ -95,8 +94,11 @@
 
          :else
          (do
-           (let [parsed   (read-string (str "(" line ")"))
-                 resolved (last (fixpoint (partial replace* variables) parsed))
-                 reduced  (reduce-last combinators resolved limit)]
-             (println reduced))
+           (try
+             (let [parsed   (read-string (str "(" line ")"))
+                   resolved (last (fixpoint (partial replace* variables) parsed))
+                   reduced  (reduce-last combinators resolved limit)]
+               (println reduced))
+             (catch RuntimeException e
+               (println (ex-message e))))
            (recur combinators variables limit)))))))

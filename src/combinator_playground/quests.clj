@@ -374,6 +374,22 @@
     '(B triple (B B (V K)))
     (last (lambda->BCKW* '[triple (B triple (B B (V K)))]))]
 
+   "15.7 Scott numerals"
+   ["zero ="
+    'K
+    "succ ="
+    (last (lambda->SKIBC* '[n [z [s s n]]]))
+    "pred ="
+    (last (lambda->SKIBC* '[n n K I]))
+    "iszero ="
+    (last (lambda->SKIBC* '[n n K (K (K I))]))
+    "fold != (doesn't terminate without x)"
+    (last (lambda->SKIBC* '(Y [rec [n [f [x n x [m f (rec m f x)]]]]])))
+    "I**** = (waits for five arguments)"
+    (replace* {'I** '(B C C)} (last (lambda->SKIBC* '[y [r [n [f [x (I** (I** (I** y r) n) f) x]]]]])))
+    "fold = (fold <n> f x = (f (f ...{n times}... (f x) ...)))"
+    (last (lambda->SKIBC* '(I**** Y [rec [n [f [x n x [m f (rec m f x)]]]]])))]
+
    "16.1 FACTORIAL n"
    ["(1) too slow"
     (with-out-str
