@@ -1,8 +1,8 @@
-(ns combinator-playground.interpreter 
+(ns combinator-playground.interpreter
   (:require
     [clojure.string :as str]
     [combinator-playground.combinators :refer [all-combinators church->int
-                                               int->church]]
+                                               int->church SF+]]
     [combinator-playground.lambda :refer [lambda->SKI* lambda->SKIBC*]]
     [combinator-playground.reduce :refer [reduce-last]]
     [combinator-playground.tree :refer [tree-node triage-node]]
@@ -23,6 +23,7 @@
 ;;; #def name expr    define a variable with name and value expr
 ;;; #tree             load △/node from tree calculus
 ;;; #triage           load △/node from triage calculus
+;;; #SF               load F from SF calculus
 
 (def interpreter-stdlib
   "A map of functions, usable like combinators in the interpreter."
@@ -62,6 +63,10 @@
          ;; load triage calculus
          (str/starts-with? line "#triage")
          (recur (into combinators triage-node) variables limit)
+
+         ;; load SF calculus
+         (str/starts-with? line "#SF")
+         (recur (SF+ combinators) variables limit)
 
          ;; set reduction limit
          (str/starts-with? line "#limit")

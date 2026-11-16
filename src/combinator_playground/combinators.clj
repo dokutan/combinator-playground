@@ -3,7 +3,7 @@
    [clojure.pprint :as pprint]
    [clojure.string :as str]
    [combinator-playground.lambda :refer [combinators->lambda lambda->str]]
-   [combinator-playground.reduce :refer [reduce-last]]
+   [combinator-playground.reduce :refer [reduce-1 reduce-last]]
    [combinator-playground.utils :refer [replace* rules->replacements]]))
 
 ;;; Different combinator bases and conversions between them.
@@ -186,6 +186,39 @@
 (def MTAB
   (select-keys all-combinators '[M T A B]))
 
+(defn SF+
+  "The basis for SF-calculus.
+   F is the factorisation operator and different from F (Finch) from `all-combinators`.
+   Requires a map of optional additional combinators."
+  [combinators]
+  (letfn [(f [x y z]
+             (let [x' (reduce-1 (into combinators {'S (all-combinators 'S) 'F (with-meta f {:arity 3})}) x)]
+               (cond
+                 (not= x x')
+                 (list 'F x' y z)
+
+                 (seq? x')
+                 (list z (butlast x') (last x'))
+
+                 :else
+                 y)))]
+    (into
+     combinators
+     {'S (all-combinators 'S)
+      'F (with-meta f {:arity 3})})))
+
+(def SF
+  "The basis for SF-calculus.
+   F is the factorisation operator and different from F (Finch) from `all-combinators`.
+   Use `SF+` to add additional combinators, `(into all-combinators SF)` does not work."
+  (SF+ {}))
+
+(def SKI->SF
+  (partial
+   replace*
+   {'K '(F F)
+    'I '(S (F F) S)}))
+
 (def BCKW->SKI
   (partial
    replace*
@@ -200,9 +233,7 @@
     'I '(W K)}))
 
 (def I->SK
-  (partial
-   replace*
-   {'I '(S K K)}))
+  (partial replace* {'I '(S K K)}))
 
 (def SKI->iota
   (partial
