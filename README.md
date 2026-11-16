@@ -38,7 +38,7 @@ For function documentation, check the docstrings, either in the source code or w
 - `SKI->BCKW`, ... convert between combinators ([combinators.clj](src/combinator_playground/combinators.clj))
 - `search` search for expressions ([search.clj](src/combinator_playground/search.clj))
 - `interpreter` a primitive interpreter with variables ([interpreter.clj](src/combinator_playground/interpreter.clj))
-- basic support for tree/triage calculus ([tree.clj](src/combinator_playground/tree.clj))
+- basic support for intensional calculi: tree/triage and SF calculus ([tree.clj](src/combinator_playground/tree.clj), [combinators.clj](src/combinator_playground/combinators.clj))
 
 <details>
 <summary>Builtin combinators</summary>
@@ -99,7 +99,7 @@ Symbols | Function Abstraction | SKI | BCKW
 `Ê` | λa.λb.λc.λd.λe.λf.λg.(a (b c d) (e f g)) | `(((S (K S) K) (((S (K S) K) (S (K S) K)) (S (K S) K))) ((S (K S) K) (((S (K S) K) (S (K S) K)) (S (K S) K))))` | `((B ((B B) B)) (B ((B B) B)))`
 </details>
 
-The following graph shows some of the directly implemented conversions, more can be derived from the included set of definitions.
+The following graph shows some of the directly implemented conversions, more can be derived from the included set of definitions or composition.
 ```mermaid
 graph TD;
     lambda[λ]-->|lambda->SKI*|SKI;
@@ -113,6 +113,8 @@ graph TD;
     MTAB-->|MTAB->BCKW|BCKW;
     BCKW-->|BCKW->MTAB|MTAB;
     SKI-->|SKI->tree|tree[tree calculus];
+    SK-->|SKI->SF|SF[SF calculus];
+    SKI-->|SKI->SF|SF[SF calculus];
 ```
 
 # See also
